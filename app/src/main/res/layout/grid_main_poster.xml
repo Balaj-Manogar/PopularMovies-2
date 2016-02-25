@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Feels don't need layout here since only one element is there -->
+    <ImageView
+        android:id="@+id/img_poster"
+        style="@style/defImageStyle"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:src="@drawable/default_image"/>
+

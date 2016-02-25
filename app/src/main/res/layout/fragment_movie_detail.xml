@@ -1,0 +1,80 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="baali.nano.MovieDetailActivityFragment"
+        tools:showIn="@layout/activity_movie_detail">
+
+    <ScrollView
+        android:id="@+id/movie_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/movie_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/movie_detail_poster_img"
+                style="@style/ActImageStyle"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:src="@drawable/backdrop"/>
+
+            <TextView
+                android:id="@+id/movie_detail_title"
+                style="@style/ActTitle"
+                android:text="Title of the movie"/>
+
+
+            <TextView
+                android:id="@+id/movie_detail_release_static"
+                style="@style/ActRelease"
+                android:text="Release Date:"/>
+
+            <TextView
+                android:id="@+id/movie_detail_release"
+                style="@style/ActRating"
+                android:text="date"/>
+
+
+            <RatingBar
+                android:id="@+id/movie_detail_vote_average"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="28dp"
+                android:layout_alignBottom="@+id/movie_detail_rating_static"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/movie_detail_poster_img"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="-2dp"
+                android:isIndicator="true"
+                />
+
+            <!--<TextView-->
+            <!--android:id="@+id/movie_detail_vote_average"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Vote average"-->
+            <!--android:layout_below="@+id/movie_detail_poster_img"-->
+            <!--android:paddingBottom="@dimen/activity_horizontal_margin"-->
+            <!--android:paddingRight="@dimen/activity_horizontal_margin"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:textSize="10dp"-->
+            <!--android:textColor="#9e9e9e"/>-->
+
+            <TextView
+                android:id="@+id/movie_detail_rating_static"
+                style="@style/ActRatingStar"
+                android:text="Rating:"/>
+
+            <TextView
+                android:id="@+id/movie_detail_synopsis"
+                style="@style/actSynposis"
+                android:text="movie synopsis come here..."/>
+        </RelativeLayout>
+    </ScrollView>
+
+
+</FrameLayout>

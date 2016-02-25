@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Popular Movies - 1</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Menu-->
+    <string name="action_popular">Sort by Popular</string>
+    <string name="action_rated">Sort by Rating</string>
+
+
+    <!-- Fetch Movie Data -->
+    <string name="q_base_url">http://api.themoviedb.org/3/discover/movie</string>
+    <string name="q_popular">popularity</string>
+    <string name="q_rated">vote_average</string>
+    <string name="sort_asc">asc</string>
+    <string name="sort_desc">desc</string>
+    <string name="q_delim">.</string>
+    <string name="q_api_key">api_key</string>
+    <string name="q_param_sort_type">sort_by</string>
+
+    <!-- Movie image-->
+    <string name="img_poster_url">http://image.tmdb.org/t/p/w185</string>
+    <string name="img_backdrop_url">http://image.tmdb.org/t/p/w500</string>
+    <string name="title_activity_movie_detail">Movie</string>
+
+
+</resources>

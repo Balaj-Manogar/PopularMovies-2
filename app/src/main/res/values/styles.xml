@@ -1,0 +1,83 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+    <style name="PosterLayout">
+        <item name="android:padding">2dp</item>
+    </style>
+
+    <style name="TextWrapContent">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="defImageStyle">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="ActImageStyle" parent="defImageStyle">
+        <item name="android:background">@color/colorWhite</item>
+    </style>
+
+    <style name="ActTitle" parent="TextWrapContent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_alignBottom">@id/movie_detail_poster_img</item>
+        <item name="android:layout_alignLeft">@id/movie_detail_poster_img</item>
+        <item name="android:background">@color/colorTitleBg</item>
+        <item name="android:gravity">bottom</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/detailStaticPadding</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/detailTitle</item>
+    </style>
+
+    <style name="ActRelease" parent="TextWrapContent">
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_below">@+id/movie_detail_poster_img</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/detailStaticPadding</item>
+        <item name="android:textColor">@color/colorRelease</item>
+        <item name="android:textSize">@dimen/detailStaticText</item>
+    </style>
+
+    <style name="ActRating" parent="TextWrapContent">
+        <item name="android:layout_below">@id/movie_detail_poster_img</item>
+        <item name="android:layout_toRightOf">@id/movie_detail_release_static</item>
+        <item name="android:textColor">@color/colorRelease</item>
+        <item name="android:textSize">@dimen/detailStaticText</item>
+    </style>
+
+    <style name="ActRatingStar" parent="TextWrapContent">
+        <item name="android:layout_below">@+id/movie_detail_poster_img</item>
+        <item name="android:layout_toLeftOf">@id/movie_detail_vote_average</item>
+        <item name="android:paddingRight">@dimen/detailStaticPadding</item>
+        <item name="android:textSize">@dimen/detailStaticText</item>
+    </style>
+
+    <style name="actSynposis" parent="TextWrapContent">
+        <item name="android:layout_below">@+id/movie_detail_vote_average</item>
+        <item name="android:layout_margin">@dimen/activity_vertical_margin</item>
+        <item name="android:textColor">@color/colorStaticGrey</item>
+        <item name="android:typeface">sans</item>
+    </style>
+
+</resources>
