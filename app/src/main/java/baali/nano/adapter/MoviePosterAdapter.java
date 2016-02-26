@@ -15,6 +15,8 @@ import java.util.List;
 
 import baali.nano.R;
 import baali.nano.model.Movie;
+import butterknife.BindString;
+import butterknife.ButterKnife;
 
 /**
  * Created by Balaji on 09/01/16.
@@ -26,6 +28,9 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
     private final Context context;
     private int layoutResourceId;
     private List<Movie> moviesList;
+
+    @BindString(R.string.img_backdrop_url)
+    String mainBackdropPrefix;
 
     public MoviePosterAdapter(Context context, int resource, List<Movie> moviesList)
     {
@@ -45,10 +50,13 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
         }
-
+        ButterKnife.bind(this, row);
         ImageView imageView = (ImageView) row.findViewById(R.id.img_poster);
-        Picasso.with(this.context).load(movie.getPosterPath()).placeholder(R.drawable.main_default_poster_drawable).error
-                (R.drawable.main_error_poster_drawable).into(imageView);
+        String posterPath = mainBackdropPrefix + movie.getPosterPath();
+        Picasso.with(this.context).load(posterPath)
+                .placeholder(R.drawable.main_default_poster_drawable)
+                .error(R.drawable.main_error_poster_drawable)
+                .into(imageView);
         Log.d(TAG, "getView: " + row);
 
         //ImageView imageView = (ImageView) convertView.findViewById(R.id.main_poster_img);

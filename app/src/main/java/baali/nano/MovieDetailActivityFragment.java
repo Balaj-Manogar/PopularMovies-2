@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import baali.nano.model.Movie;
 import butterknife.Bind;
+import butterknife.BindString;
 import butterknife.ButterKnife;
 
 /**
@@ -35,6 +36,9 @@ public class MovieDetailActivityFragment extends Fragment
     RatingBar voteAverage;
     @Bind(R.id.movie_detail_synopsis)
     TextView synopsis;
+
+    @BindString(R.string.img_poster_url)
+    String detailBackdropPrefix;
 
     public MovieDetailActivityFragment()
     {
@@ -80,7 +84,11 @@ public class MovieDetailActivityFragment extends Fragment
 
         Log.d(TAG, "putMovieDataIntoViews: " + movie);
         // download image and map to view
-        Picasso.with(getContext()).load(movie.getBackdropPath()).into(poster);
+        String backdropPath = detailBackdropPrefix + movie.getBackdropPath();
+        Picasso.with(getContext()).load(backdropPath)
+                .placeholder(R.drawable.main_default_poster_drawable)
+                .error(R.drawable.main_error_poster_drawable)
+                .into(poster);
         title.setText(movie.getTitle());
         releaseDate.setText(movie.getReleaseDate());
         voteAverage.setRating(Float.valueOf(movie.getVoteAverage()) / 2f);

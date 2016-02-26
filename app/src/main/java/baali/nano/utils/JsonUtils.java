@@ -30,8 +30,8 @@ public class JsonUtils
                 movie.setTitle(currentMovieDetail.getString("title"));
                 movie.setOriginalTitle(currentMovieDetail.getString("original_title"));
                 movie.setAdult(currentMovieDetail.getBoolean("adult"));
-                movie.setPosterPath(posterPath + currentMovieDetail.getString("poster_path"));
-                movie.setBackdropPath(backdropPath + currentMovieDetail.getString("backdrop_path"));
+                movie.setPosterPath(currentMovieDetail.getString("poster_path"));
+                movie.setBackdropPath(currentMovieDetail.getString("backdrop_path"));
                 movie.setOverview(currentMovieDetail.getString("overview"));
                 movie.setReleaseDate(currentMovieDetail.getString("release_date"));
                 movie.setPopularity(currentMovieDetail.getDouble("popularity"));

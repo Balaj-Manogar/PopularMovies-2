@@ -145,7 +145,7 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
         String sortOrder = movieUtil.getSortingOrder(option);
         getMovieDataUsingRetrofit(sortOrder);
 
-        getMovieDataUsingAsyncTask(option, movieUtil);
+//        getMovieDataUsingAsyncTask(option, movieUtil);
 
         Log.d(TAG, "init: " + movieUtil.buildURL(option));
         //Toast.makeText(getActivity(), movieUtil.buildURL(option), Toast.LENGTH_LONG).show();
@@ -157,8 +157,8 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
         String requestUrl = movieUtil.buildURL(option);
 
 
-        String posterBasePath = movieUtil.getStringResource(R.string.img_poster_url);
         String backdropBasePath = movieUtil.getStringResource(R.string.img_backdrop_url);
+        String posterBasePath = movieUtil.getStringResource(R.string.img_poster_url);
 
         FetchMovieData movieData = new FetchMovieData();
         movieData.setMovieDelegate(this);
@@ -200,7 +200,7 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
 
     public void getMovieDataUsingRetrofit(String order)
     {
-        // retrofit debug
+        // retrofit debug purpose
         OkHttpClient.Builder httpClient = getDebugBuilder();
 
         Retrofit apiService = new Retrofit.Builder().baseUrl(baseUrl)
@@ -219,6 +219,7 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
             public void onResponse(Call<MovieAPIResponse> call, Response<MovieAPIResponse> response)
             {
                 Log.d(TAG, "onResponse: Retro: " + response.body().apiMoviesList.get(0));
+                process(response.body().apiMoviesList);
             }
 
             @Override
