@@ -142,21 +142,27 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
     private void populateGridView(MovieFetchOptions option)
     {
         TheMovieDBUtils movieUtil = new TheMovieDBUtils(getContext());
-        String requestUrl = movieUtil.buildURL(option);
-
         String sortOrder = movieUtil.getSortingOrder(option);
-
-        String posterBasePath = movieUtil.getStringResource(R.string.img_poster_url);
-        String backdropBasePath = movieUtil.getStringResource(R.string.img_backdrop_url);
-
         getMovieDataUsingRetrofit(sortOrder);
-        FetchMovieData movieData = new FetchMovieData();
-        movieData.setMovieDelegate(this);
-        movieData.execute(requestUrl, posterBasePath, backdropBasePath);
+
+        getMovieDataUsingAsyncTask(option, movieUtil);
 
         Log.d(TAG, "init: " + movieUtil.buildURL(option));
         //Toast.makeText(getActivity(), movieUtil.buildURL(option), Toast.LENGTH_LONG).show();
 
+    }
+
+    private void getMovieDataUsingAsyncTask(MovieFetchOptions option, TheMovieDBUtils movieUtil)
+    {
+        String requestUrl = movieUtil.buildURL(option);
+
+
+        String posterBasePath = movieUtil.getStringResource(R.string.img_poster_url);
+        String backdropBasePath = movieUtil.getStringResource(R.string.img_backdrop_url);
+
+        FetchMovieData movieData = new FetchMovieData();
+        movieData.setMovieDelegate(this);
+        movieData.execute(requestUrl, posterBasePath, backdropBasePath);
     }
 
     private ArrayAdapter getPosterAdapter()
