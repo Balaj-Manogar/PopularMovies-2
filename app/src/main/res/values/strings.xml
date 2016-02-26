@@ -9,6 +9,7 @@
 
     <!-- Fetch Movie Data -->
     <string name="q_base_url">http://api.themoviedb.org/3/discover/movie</string>
+    <string name="q_retrofit_base_url">http://api.themoviedb.org/</string>
     <string name="q_popular">popularity</string>
     <string name="q_rated">vote_average</string>
     <string name="sort_asc">asc</string>

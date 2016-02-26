@@ -3,6 +3,8 @@ package baali.nano.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by Balaji on 07/01/16.
  */
@@ -21,17 +23,29 @@ public class Movie implements Parcelable
             return new Movie[size];
         }
     };
+
     private long id;
     private String title;
+
+    @SerializedName("original_title")
     private String originalTitle;
     private boolean adult;
+    @SerializedName("poster_path")
     private String posterPath;
+
+    @SerializedName("backdrop_path")
     private String backdropPath;
     private String overview;
+
+    @SerializedName("release_date")
     private String releaseDate;
     private double popularity;
+
+    @SerializedName("vote_count")
     private int voteCount;
     private boolean video;
+
+    @SerializedName("vote_average")
     private String voteAverage;
 
     public Movie()

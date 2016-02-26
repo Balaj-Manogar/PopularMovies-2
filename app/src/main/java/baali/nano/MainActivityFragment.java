@@ -3,6 +3,7 @@ package baali.nano;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,8 +22,19 @@ import java.util.List;
 import baali.nano.adapter.MoviePosterAdapter;
 import baali.nano.config.MovieFetchOptions;
 import baali.nano.model.Movie;
+import baali.nano.model.MovieAPIResponse;
 import baali.nano.services.FetchMovieData;
+import baali.nano.services.rest.TheMovieAPIService;
 import baali.nano.utils.TheMovieDBUtils;
+import butterknife.BindString;
+import butterknife.ButterKnife;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -30,6 +42,8 @@ import baali.nano.utils.TheMovieDBUtils;
 public class MainActivityFragment extends Fragment  implements MainActivity.DelegateMovieAdapterProcess<Movie>
         , AdapterView.OnItemClickListener
 {
+    @BindString(R.string.q_retrofit_base_url)
+    String baseUrl;
     private final String TAG = MainActivityFragment.class.getSimpleName();
     private  List<Movie> moviesList;
     private ArrayAdapter movieAdapter;
@@ -60,7 +74,7 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
             Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
+        ButterKnife.bind(this, rootView);
         bridgeGridViewWithAdapter(rootView);
 
         checkBundleAndProcess(savedInstanceState);
@@ -130,10 +144,12 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
         TheMovieDBUtils movieUtil = new TheMovieDBUtils(getContext());
         String requestUrl = movieUtil.buildURL(option);
 
+        String sortOrder = movieUtil.getSortingOrder(option);
+
         String posterBasePath = movieUtil.getStringResource(R.string.img_poster_url);
         String backdropBasePath = movieUtil.getStringResource(R.string.img_backdrop_url);
 
-
+        getMovieDataUsingRetrofit(sortOrder);
         FetchMovieData movieData = new FetchMovieData();
         movieData.setMovieDelegate(this);
         movieData.execute(requestUrl, posterBasePath, backdropBasePath);
@@ -174,5 +190,49 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
         startActivity(intent);
 
 
+    }
+
+    public void getMovieDataUsingRetrofit(String order)
+    {
+        // retrofit debug
+        OkHttpClient.Builder httpClient = getDebugBuilder();
+
+        Retrofit apiService = new Retrofit.Builder().baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient.build())
+                .build();
+
+        String sortingOrder = order;
+
+        TheMovieAPIService initAPIService = apiService.create(TheMovieAPIService.class);
+        final Call<MovieAPIResponse> apiCall = initAPIService.fetchMovies(BuildConfig.THE_MOVIE_DB_API_KEY, order);
+
+        apiCall.enqueue(new Callback<MovieAPIResponse>()
+        {
+            @Override
+            public void onResponse(Call<MovieAPIResponse> call, Response<MovieAPIResponse> response)
+            {
+                Log.d(TAG, "onResponse: Retro: " + response.body().apiMoviesList.get(0));
+            }
+
+            @Override
+            public void onFailure(Call<MovieAPIResponse> call, Throwable t)
+            {
+                Log.d(TAG, "onFailure: Retro: " + t.getMessage());
+                // display a dialog here about failure
+            }
+        });
+    }
+
+    @NonNull
+    private OkHttpClient.Builder getDebugBuilder()
+    {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
+        httpClient.addInterceptor(logging);
+        return httpClient;
     }
 }

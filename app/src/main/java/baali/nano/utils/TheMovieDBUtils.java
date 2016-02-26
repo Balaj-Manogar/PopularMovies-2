@@ -77,4 +77,21 @@ public class TheMovieDBUtils
 
         return movieApiUrl;
     }
+
+    public String getSortingOrder(MovieFetchOptions option)
+    {
+        String order = null;
+        if(option == MovieFetchOptions.Popular)
+        {
+            order = getStringResource(R.string.q_popular)+ getStringResource(R.string.q_delim) + this.sortBy;
+        }
+        else
+        {
+            order = getStringResource(R.string.q_rated)+ getStringResource(R.string.q_delim) + this.sortBy;
+        }
+
+        return order;
+    }
+
+
 }
