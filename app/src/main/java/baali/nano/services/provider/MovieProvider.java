@@ -96,13 +96,43 @@ public class MovieProvider extends ContentProvider
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs)
     {
-        return 0;
+        int type = uriMatcher.match(uri);
+        int deletedRow = -1;
+        switch (type)
+        {
+            case MOVIE:
+            {
+                deletedRow = dbHelper.getWritableDatabase().delete(MovieEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            }
+            default:
+            {
+                throw new UnsupportedOperationException("Delete Unknown Uri: " + uri);
+            }
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return deletedRow;
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs)
     {
-        return 0;
+        int type = uriMatcher.match(uri);
+        int updatedRow = -1;
+        switch (type)
+        {
+            case MOVIE:
+            {
+                updatedRow = dbHelper.getWritableDatabase().update(MovieEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            }
+            default:
+            {
+                throw new UnsupportedOperationException("update Unknown Uri: " + uri);
+            }
+        }
+        getContext().getContentResolver().notifyChange(uri, null);
+        return updatedRow;
     }
 
     @Override

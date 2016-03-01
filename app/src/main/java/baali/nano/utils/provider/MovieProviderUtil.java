@@ -12,7 +12,7 @@ import baali.nano.model.provider.MovieContract.MovieEntry;
 public class MovieProviderUtil extends SQLiteOpenHelper
 {
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "movie.db";
+    public static final String DATABASE_NAME = "movie.db";
 
     public MovieProviderUtil(Context context)
     {
