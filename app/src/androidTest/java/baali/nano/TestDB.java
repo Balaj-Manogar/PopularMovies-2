@@ -92,6 +92,85 @@ public class TestDB extends AndroidTestCase
         assertTrue("Movie columns set not empty", movieColumns.isEmpty());
     }
 
+    public void testInsertRecordDeadPool()
+    {
+        deleteDataBase();
+        SQLiteDatabase db = new MovieProviderUtil(mContext).getWritableDatabase();
+        long insertStatus = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, TestUtils.deadPoolMovieRecords());
+        assertTrue(insertStatus != -1);
+        // validate data
+        Cursor c = db.query(MovieContract.MovieEntry.TABLE_NAME, null, null, null, null, null, null);
+        assertTrue(c.moveToFirst());
+        String movieTitle = c.getString(c.getColumnIndex(MovieContract.MovieEntry.ORIGINAL_TITLE));
+        assertEquals("Title not matches ", TestUtils.deadPoolMovieRecords().get(MovieContract.MovieEntry.ORIGINAL_TITLE)
+                .toString(), movieTitle);
+    }
+
+    public void testInsertRecordMadMax()
+    {
+        deleteDataBase();
+        SQLiteDatabase db = new MovieProviderUtil(mContext).getWritableDatabase();
+        long insertStatus = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, TestUtils.madMaxMovieRecords());
+        assertTrue(insertStatus != -1);
+        Cursor c = db.query(MovieContract.MovieEntry.TABLE_NAME, null, null, null, null, null, null);
+        assertTrue(c.moveToFirst());
+        String movieTitle = c.getString(c.getColumnIndex(MovieContract.MovieEntry.ORIGINAL_TITLE));
+        assertEquals("Title not matches ", TestUtils.madMaxMovieRecords().get(MovieContract.MovieEntry.ORIGINAL_TITLE)
+                .toString(), movieTitle);
+    }
+
+    public void testReadMultipleRecords()
+    {
+        deleteDataBase();
+        SQLiteDatabase db = new MovieProviderUtil(mContext).getWritableDatabase();
+        db.beginTransaction();
+        long madMaxStatus = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, TestUtils.madMaxMovieRecords());
+        long deadPoolStatus = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, TestUtils.deadPoolMovieRecords());
+
+
+        assertTrue("issue on multiple row insertion", madMaxStatus != -1 && deadPoolStatus != -1);
+
+        Cursor c = db.query(MovieContract.MovieEntry.TABLE_NAME, null, null, null, null, null, null);
+        assertTrue(c.moveToFirst());
+        assertTrue("Row is less than 2", c.getCount() == 2);
+        db.endTransaction();
+    }
+
+    public void testInsertSameRecordTwice()
+    {
+        deleteDataBase();
+        SQLiteDatabase db = new MovieProviderUtil(mContext).getWritableDatabase();
+        long madMaxStatus = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, TestUtils.madMaxMovieRecords());
+        // this should not be executed, because movie id is unique in db and throws SQLiteConstraintException.
+        // returns -1
+        long madMaxStatus2 = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, TestUtils.madMaxMovieRecords());
+
+        assertFalse((madMaxStatus != -1 && madMaxStatus2 != -1));
+    }
+
+    public void testDeleteRecord()
+    {
+        deleteDataBase();
+        SQLiteDatabase db = new MovieProviderUtil(mContext).getWritableDatabase();
+        long madMaxStatus = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, TestUtils.madMaxMovieRecords());
+        if (madMaxStatus != -1)
+        {
+            Cursor c = db.query(MovieContract.MovieEntry.TABLE_NAME, null, null, null, null, null, null);
+            c.moveToFirst();
+            int movieId = c.getInt(c.getColumnIndex(MovieContract.MovieEntry.MOVIE_ID));
+            assertEquals("Delete movie id not matched..", TestUtils.madMaxMovieRecords().get(MovieContract.MovieEntry
+                    .MOVIE_ID), movieId );
+            //delete operation start
+            int deleteStatus = db.delete(MovieContract.MovieEntry.TABLE_NAME, MovieContract.MovieEntry.MOVIE_ID + "=?",
+                    new String[]{String.valueOf(movieId)});
+            assertTrue("Data not deleted...", deleteStatus > 0);
+        }
+
+
+
+
+    }
+
     private void deleteDataBase()
     {
         mContext.deleteDatabase(MovieProviderUtil.DATABASE_NAME);
