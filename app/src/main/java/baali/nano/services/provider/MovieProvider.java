@@ -1,7 +1,6 @@
 package baali.nano.services.provider;
 
 import android.content.ContentProvider;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -49,7 +48,7 @@ public class MovieProvider extends ContentProvider
             case MOVIE_WITH_ID:
             {
                 cursor = db.query(MovieEntry.TABLE_NAME, MovieEntry.PROJECTION_ALL
-                        , MovieEntry.MOVIE_ID + "='" + ContentUris.parseId(uri)+ "'"
+                        , MovieEntry.MOVIE_ID + "=?"
                         , selectionArgs, null, null, sortOrder);
                 break;
             }
@@ -142,9 +141,9 @@ public class MovieProvider extends ContentProvider
         switch (type)
         {
             case MOVIE:
-                return MovieContract.MovieEntry.CONTENT_ITEM_TYPE;
+                return MovieEntry.CONTENT_TYPE;
             case MOVIE_WITH_ID:
-                return MovieContract.MovieEntry.CONTENT_TYPE;
+                return MovieEntry.CONTENT_ITEM_TYPE;
         }
         return null;
     }
