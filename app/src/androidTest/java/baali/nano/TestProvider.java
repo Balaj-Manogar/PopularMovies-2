@@ -116,6 +116,27 @@ public class TestProvider extends AndroidTestCase
         db.close();
     }
 
+    public void testDeleteSingleMovie()
+    {
+        deleteAllRecordsFromProvider();
+        MovieProviderUtil dbHelper = new MovieProviderUtil(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues deadPoolValues = TestUtils.deadPoolMovieRecords();
+
+        Uri deadPoolUri = mContext.getContentResolver().insert(MovieEntry.CONTENT_URI, deadPoolValues);
+
+        long deadPoolStatus = ContentUris.parseId(deadPoolUri);
+
+        assertTrue(deadPoolStatus != -1);
+        String movieId = deadPoolValues.getAsString(MovieEntry.MOVIE_ID);
+        int deleteStatus = mContext.getContentResolver().delete(deadPoolUri, MovieEntry.MOVIE_ID + "=?", new
+                String[]{movieId});
+
+        assertTrue("Not deleted", deleteStatus != -1);
+        db.close();
+    }
+
     void deleteAllRecordsFromProvider()
     {
         mContext.getContentResolver().delete(MovieEntry.CONTENT_URI, null, null);
