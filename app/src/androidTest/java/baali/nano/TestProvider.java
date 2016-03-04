@@ -137,6 +137,8 @@ public class TestProvider extends AndroidTestCase
         db.close();
     }
 
+
+
     void deleteAllRecordsFromProvider()
     {
         mContext.getContentResolver().delete(MovieEntry.CONTENT_URI, null, null);

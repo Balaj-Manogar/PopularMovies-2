@@ -96,10 +96,15 @@ public class MovieProvider extends ContentProvider
     public int delete(Uri uri, String selection, String[] selectionArgs)
     {
         int type = uriMatcher.match(uri);
-        int deletedRow = -1;
+        int deletedRow;
         switch (type)
         {
             case MOVIE:
+            {
+                deletedRow = dbHelper.getWritableDatabase().delete(MovieEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            }
+            case MOVIE_WITH_ID:
             {
                 deletedRow = dbHelper.getWritableDatabase().delete(MovieEntry.TABLE_NAME, selection, selectionArgs);
                 break;
