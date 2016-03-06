@@ -11,7 +11,7 @@ import baali.nano.model.provider.MovieContract.MovieEntry;
  */
 public class MovieProviderUtil extends SQLiteOpenHelper
 {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     public static final String DATABASE_NAME = "movie.db";
 
     public MovieProviderUtil(Context context)
@@ -28,7 +28,8 @@ public class MovieProviderUtil extends SQLiteOpenHelper
                 + MovieEntry.POSTER_PATH + " TEXT, " + MovieEntry.BACKDROP_PATH + " TEXT, "
                 + MovieEntry.OVERVIEW + " TEXT NOT NULL, " + MovieEntry.RELEASE_DATE + " TEXT NOT NULL, "
                 + MovieEntry.POPULARITY + " REAL NOT NULL, " + MovieEntry.VOTE_COUNT + " INTEGER NOT NULL, "
-                + MovieEntry.VOTE_AVERAGE + " TEXT"
+                + MovieEntry.VOTE_AVERAGE + " TEXT, "
+                + MovieEntry.FAVOURITE + " TEXT NOT NULL "
                 + ")";
         db.execSQL(CREATE_MOVIE_TABLE);
     }

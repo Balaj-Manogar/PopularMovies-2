@@ -1,5 +1,6 @@
 package baali.nano.utils;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -7,6 +8,8 @@ import android.net.Uri;
 import baali.nano.BuildConfig;
 import baali.nano.R;
 import baali.nano.config.MovieFetchOptions;
+import baali.nano.model.Movie;
+import baali.nano.model.provider.MovieContract.MovieEntry;
 
 /**
  * Created by Balaji on 05/01/16.
@@ -91,6 +94,24 @@ public class TheMovieDBUtils
         }
 
         return order;
+    }
+
+    public static ContentValues parseMovieToContentValues(Movie m)
+    {
+        ContentValues movieValues = new ContentValues();
+        movieValues.put(MovieEntry.MOVIE_ID, m.getId());
+        movieValues.put(MovieEntry.ADULT, m.isAdult());
+        movieValues.put(MovieEntry.ORIGINAL_TITLE, m.getOriginalTitle());
+        movieValues.put(MovieEntry.POSTER_PATH, m.getPosterPath());
+        movieValues.put(MovieEntry.OVERVIEW, m.getOverview());
+        movieValues.put(MovieEntry.RELEASE_DATE, m.getReleaseDate());
+        movieValues.put(MovieEntry.POPULARITY, m.getPopularity());
+        movieValues.put(MovieEntry.VOTE_COUNT, m.getVoteCount());
+        movieValues.put(MovieEntry.VOTE_AVERAGE, m.getVoteAverage());
+        movieValues.put(MovieEntry.FAVOURITE, m.isFavourite());
+
+
+        return movieValues;
     }
 
 

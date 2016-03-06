@@ -145,7 +145,7 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
         String sortOrder = movieUtil.getSortingOrder(option);
         getMovieDataUsingRetrofit(sortOrder);
 
-//        getMovieDataUsingAsyncTask(option, movieUtil);
+       //getMovieDataUsingAsyncTask(option, movieUtil);
 
         Log.d(TAG, "init: " + movieUtil.buildURL(option));
         //Toast.makeText(getActivity(), movieUtil.buildURL(option), Toast.LENGTH_LONG).show();

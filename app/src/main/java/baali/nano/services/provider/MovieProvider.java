@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.util.Log;
 
 import baali.nano.model.provider.MovieContract;
 import baali.nano.model.provider.MovieContract.MovieEntry;
@@ -17,6 +18,7 @@ import baali.nano.utils.provider.MovieProviderUtil;
  */
 public class MovieProvider extends ContentProvider
 {
+    private static final String TAG = MovieProvider.class.getSimpleName();
     static final int MOVIE = 1;
     static final int MOVIE_WITH_ID = 2;
 
@@ -47,9 +49,10 @@ public class MovieProvider extends ContentProvider
             }
             case MOVIE_WITH_ID:
             {
+                selection = (selection == null) ? MovieEntry.MOVIE_ID + "=?" : selection;
+                Log.d(TAG, "query: " + selection);
                 cursor = db.query(MovieEntry.TABLE_NAME, MovieEntry.PROJECTION_ALL
-                        , MovieEntry.MOVIE_ID + "=?"
-                        , selectionArgs, null, null, sortOrder);
+                        , selection, selectionArgs, null, null, sortOrder);
                 break;
             }
             default:

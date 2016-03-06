@@ -1,8 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Feels don't need layout here since only one element is there -->
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:clickable="false"
+             android:focusable="false"
+             android:focusableInTouchMode="false">
+
+
     <ImageView
         android:id="@+id/img_poster"
         style="@style/defImageStyle"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:src="@drawable/default_image"/>
+        android:src="@drawable/default_image"
+        />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/fav_outline"
+        android:background="#67000000"
+        android:cropToPadding="true"
+        android:padding="4dp"
+        android:id="@+id/poster_favourite"
+        android:layout_gravity="top|right"/>
+
+</FrameLayout>

@@ -44,13 +44,15 @@ public class MovieContract
         public static final String POPULARITY = "popularity";
         public static final String VOTE_COUNT = "voteCount";
         public static final String VOTE_AVERAGE = "voteAverage";
+        public static final String FAVOURITE = "favourite";
+
 
         /**
          * A projection of all columns in the items table.
          */
         public static final String[] PROJECTION_ALL = {
                 _ID, MOVIE_ID, ADULT, ORIGINAL_TITLE, POSTER_PATH, BACKDROP_PATH, OVERVIEW
-                , RELEASE_DATE, POPULARITY, VOTE_COUNT, VOTE_AVERAGE
+                , RELEASE_DATE, POPULARITY, VOTE_COUNT, VOTE_AVERAGE, FAVOURITE
         };
 
 

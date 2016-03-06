@@ -143,10 +143,7 @@ public class TestProvider extends AndroidTestCase
     {
         mContext.getContentResolver().delete(MovieEntry.CONTENT_URI, null, null);
         Cursor c = mContext.getContentResolver().query(MovieEntry.CONTENT_URI,
-                null,
-                null,
-                null,
-                null);
+                null, null, null, null);
 
         assertEquals("Delete not performed", 0, c.getCount());
         c.close();

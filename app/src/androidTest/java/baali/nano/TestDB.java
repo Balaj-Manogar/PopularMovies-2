@@ -34,6 +34,8 @@ public class TestDB extends AndroidTestCase
 
         assertTrue("Error: This means that the database has not been created correctly",
                 c.moveToFirst());
+        c.close();
+        db.close();
 
     }
 
@@ -60,6 +62,8 @@ public class TestDB extends AndroidTestCase
         }
 
         assertEquals("Movie Table not found in db", MovieContract.MovieEntry.TABLE_NAME, movieTableName);
+        c.close();
+        db.close();
     }
 
     public void testIsAllColumnsCreated()
@@ -90,6 +94,8 @@ public class TestDB extends AndroidTestCase
             }
         }
         assertTrue("Movie columns set not empty", movieColumns.isEmpty());
+        c.close();
+        db.close();
     }
 
     public void testInsertRecordDeadPool()
@@ -104,6 +110,8 @@ public class TestDB extends AndroidTestCase
         String movieTitle = c.getString(c.getColumnIndex(MovieContract.MovieEntry.ORIGINAL_TITLE));
         assertEquals("Title not matches ", TestUtils.deadPoolMovieRecords().get(MovieContract.MovieEntry.ORIGINAL_TITLE)
                 .toString(), movieTitle);
+        c.close();
+        db.close();
     }
 
     public void testInsertRecordMadMax()
@@ -117,6 +125,8 @@ public class TestDB extends AndroidTestCase
         String movieTitle = c.getString(c.getColumnIndex(MovieContract.MovieEntry.ORIGINAL_TITLE));
         assertEquals("Title not matches ", TestUtils.madMaxMovieRecords().get(MovieContract.MovieEntry.ORIGINAL_TITLE)
                 .toString(), movieTitle);
+        c.close();
+        db.close();
     }
 
     public void testReadMultipleRecords()
@@ -134,6 +144,8 @@ public class TestDB extends AndroidTestCase
         assertTrue(c.moveToFirst());
         assertTrue("Row is less than 2", c.getCount() == 2);
         db.endTransaction();
+        c.close();
+        db.close();
     }
 
     public void testInsertSameRecordTwice()
@@ -146,6 +158,7 @@ public class TestDB extends AndroidTestCase
         long madMaxStatus2 = db.insert(MovieContract.MovieEntry.TABLE_NAME, null, TestUtils.madMaxMovieRecords());
 
         assertFalse((madMaxStatus != -1 && madMaxStatus2 != -1));
+        db.close();
     }
 
     public void testDeleteRecord()
@@ -164,7 +177,10 @@ public class TestDB extends AndroidTestCase
             int deleteStatus = db.delete(MovieContract.MovieEntry.TABLE_NAME, MovieContract.MovieEntry.MOVIE_ID + "=?",
                     new String[]{String.valueOf(movieId)});
             assertTrue("Data not deleted...", deleteStatus > 0);
+            c.close();
         }
+
+        db.close();
 
 
 

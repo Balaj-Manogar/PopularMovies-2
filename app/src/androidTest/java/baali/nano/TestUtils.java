@@ -23,11 +23,13 @@ public class TestUtils extends AndroidTestCase
         values.put(MovieEntry.POPULARITY, 64.655808);
         values.put(MovieEntry.VOTE_COUNT, 1546);
         values.put(MovieEntry.VOTE_AVERAGE, "7.37");
+        values.put(MovieEntry.FAVOURITE, false);
         return values;
     }
 
     public static ContentValues madMaxMovieRecords()
     {
+
         ContentValues values = new ContentValues();
         values.put(MovieEntry.MOVIE_ID, 76341);
         values.put(MovieEntry.ADULT, "false");
@@ -39,6 +41,7 @@ public class TestUtils extends AndroidTestCase
         values.put(MovieEntry.POPULARITY, 52.655808);
         values.put(MovieEntry.VOTE_COUNT, 1546);
         values.put(MovieEntry.VOTE_AVERAGE, "7.37");
+        values.put(MovieEntry.FAVOURITE, false);
         return values;
     }
 }
