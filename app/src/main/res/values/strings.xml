@@ -22,6 +22,7 @@
     <string name="img_poster_url">http://image.tmdb.org/t/p/w185</string>
     <string name="img_backdrop_url">http://image.tmdb.org/t/p/w500</string>
     <string name="title_activity_movie_detail">Movie</string>
+    <string name="offline_directory">pm2</string>
 
 
 </resources>
