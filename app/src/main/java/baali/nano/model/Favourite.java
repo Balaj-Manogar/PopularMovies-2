@@ -11,4 +11,5 @@ public class Favourite
 {
     public View view;
     public FavouriteInsertStatus status;
+    public Movie movie;
 }

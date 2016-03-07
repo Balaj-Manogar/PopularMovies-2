@@ -117,6 +117,7 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
                 Favourite model = new Favourite();
                 model.view = params[0];
                 model.status = addToFavourite(currentView, currentMovie);
+                model.movie = currentMovie;
 
 
 
@@ -129,28 +130,94 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
             {
                 ImageView iv = (ImageView) favModel.view;
 
-                switch (favModel.status)
-                {
-                    case Sucess:
-                    {
-                        iv.setImageResource(R.drawable.fav_filled);
-                        break;
-                    }
-                    case Duplicate:
-                    {
-                        Toast.makeText(getContext(), "Already favourite movie", Toast.LENGTH_LONG).show();
-                        break;
-                    }
-                    case Failure:
-                    {
-                        Toast.makeText(getContext(), "Error: tap again", Toast.LENGTH_LONG).show();
-                    }
-                }
+                favourite(favModel, iv);
 
             }
         };
 
         task.execute(fav);
+    }
+
+    private void favourite(Favourite favModel, ImageView iv)
+    {
+        switch (favModel.status)
+        {
+            case Sucess:
+            {
+                iv.setImageResource(R.drawable.fav_filled);
+                storeFavouriteImages(favModel);
+                break;
+            }
+            case Duplicate:
+            {
+                Toast.makeText(getContext(), "Already favourite movie", Toast.LENGTH_LONG).show();
+                break;
+            }
+            case Failure:
+            {
+                Toast.makeText(getContext(), "Error: tap again", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void storeFavouriteImages(Favourite favModel)
+    {
+        final Movie m = favModel.movie;
+        String posterPath = mainBackdropPrefix + m.getPosterPath();
+        Picasso.with(getContext()).load(posterPath).into(new Target()
+        {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
+            {
+                final File dir = new File(Environment.getDataDirectory().getPath()
+                        + "/data/" + getContext().getApplicationContext().getPackageName()
+                        + "/" + context.getString(R.string.offline_directory) + "//"
+                );
+
+//                                File f = new File(Environment.getDataDirectory().getPath()
+//                                        + "/data/" + getContext().getApplicationContext().getPackageName());
+//                                boolean isThere = f.isDirectory();
+//                                Boolean writable = f.canWrite();
+                Log.d(TAG, "onBitmapLoaded: " + dir.getAbsolutePath());
+                boolean dirExists = dir.exists();
+                if (!dirExists)
+                {
+                    boolean createDirs = dir.mkdirs();
+                    if (!createDirs)
+                    {
+                        return;
+                    }
+                }
+
+                final File image = new File(dir + m.getPosterPath());
+                try
+                {
+                    image.createNewFile();
+                    FileOutputStream fos = new FileOutputStream(image);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
+                    Log.d(TAG, "onBitmapLoaded Image: " + image.getAbsolutePath());
+                    fos.flush();
+                    fos.close();
+
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable)
+            {
+                Toast.makeText(getContext(), "Image downloading failed", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable)
+            {
+
+            }
+        });
     }
 
     private FavouriteInsertStatus addToFavourite(View view, Movie currentMovie)
@@ -170,60 +237,7 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
         FavouriteInsertStatus status;
         if (getFavouriteStatus(m) == FavouriteInsertStatus.NoDuplicate)
         {
-            new Thread(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    String posterPath = mainBackdropPrefix + m.getPosterPath();
-                    Picasso.with(getContext()).load(posterPath).into(new Target()
-                    {
-                        @Override
-                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
-                        {
-                            File dir = new File(Environment.getDataDirectory().getPath()
-                                    + "/" + getContext().getApplicationContext().getPackageName()
-                                    + "/" + context.getString(R.string.offline_directory)
-                            );
 
-                            if (!dir.exists())
-                            {
-                                if (!dir.mkdirs())
-                                {
-                                    return;
-                                }
-                            }
-
-                            File image = new File(dir + m.getPosterPath());
-                            try
-                            {
-                                image.createNewFile();
-                                FileOutputStream fos = new FileOutputStream(image);
-                                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
-                                fos.flush();
-                                fos.close();
-
-                            }
-                            catch (IOException e)
-                            {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onBitmapFailed(Drawable errorDrawable)
-                        {
-                            Toast.makeText(getContext(), "Image downloading failed", Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onPrepareLoad(Drawable placeHolderDrawable)
-                        {
-
-                        }
-                    });
-                }
-            }).start();
             status = insertFavouriteMovie(m);
         }
         else
