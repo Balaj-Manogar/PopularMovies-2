@@ -6,8 +6,6 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -20,11 +18,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 import baali.nano.R;
@@ -32,6 +27,7 @@ import baali.nano.config.FavouriteInsertStatus;
 import baali.nano.model.Favourite;
 import baali.nano.model.Movie;
 import baali.nano.model.provider.MovieContract.MovieEntry;
+import baali.nano.services.task.SaveFavouriteImageToDisk;
 import baali.nano.utils.TheMovieDBUtils;
 import butterknife.Bind;
 import butterknife.BindString;
@@ -103,24 +99,26 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
         final Movie currentMovie = moviesList.get(position);
         Log.d(TAG, "favouriteClick: " + currentMovie);
         ImageView fav = (ImageView) view.findViewById(R.id.poster_favourite);
-
-        addFavouriteMovieAsync(currentView, currentMovie, fav);
+        Log.d(TAG, "favouriteClicktest: before" + currentMovie);
+        addOrRemoveFavouriteMovieAsync(currentView, currentMovie, fav);
+        Log.d(TAG, "favouriteClicktest: after" + currentMovie);
+        //moviesList.get(position).favourite
     }
 
-    private void addFavouriteMovieAsync(final View currentView, final Movie currentMovie, ImageView fav)
+
+    private void addOrRemoveFavouriteMovieAsync(final View currentView, final Movie currentMovie, ImageView fav)
     {
-        AsyncTask<View, Void, Favourite> task = new AsyncTask<View, Void, Favourite>()
+        final ImageView imageView = (ImageView) currentView;
+        AsyncTask<Void, Void, Favourite> task = new AsyncTask<Void, Void, Favourite>()
         {
+
             @Override
-            protected Favourite doInBackground(View... params)
+            protected Favourite doInBackground(Void... params)
             {
                 Favourite model = new Favourite();
-                model.view = params[0];
-                model.status = addToFavourite(currentView, currentMovie);
+//                model.view = imageView;
+                model.status = addToFavourite(currentMovie);
                 model.movie = currentMovie;
-
-
-
 
                 return model;
             }
@@ -128,14 +126,15 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
             @Override
             protected void onPostExecute(Favourite favModel)
             {
+                favModel.view = currentView;
                 ImageView iv = (ImageView) favModel.view;
-
+                Log.d(TAG, "onPostExecuteequals: " + moviesList.contains(favModel.movie));
                 favourite(favModel, iv);
 
             }
         };
 
-        task.execute(fav);
+        task.execute();
     }
 
     private void favourite(Favourite favModel, ImageView iv)
@@ -146,11 +145,14 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
             {
                 iv.setImageResource(R.drawable.fav_filled);
                 storeFavouriteImages(favModel);
+                Toast.makeText(getContext(), "Added to favourite", Toast.LENGTH_LONG).show();
                 break;
             }
-            case Duplicate:
+            case Remove:
             {
-                Toast.makeText(getContext(), "Already favourite movie", Toast.LENGTH_LONG).show();
+                removeFavouriteImages(favModel);
+                iv.setImageResource(R.drawable.fav_outline);
+                Toast.makeText(getContext(), "Removed from favourite", Toast.LENGTH_LONG).show();
                 break;
             }
             case Failure:
@@ -160,70 +162,45 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
         }
     }
 
-    private void storeFavouriteImages(Favourite favModel)
+    private void removeFavouriteImages(Favourite favModel)
     {
-        final Movie m = favModel.movie;
-        String posterPath = mainBackdropPrefix + m.getPosterPath();
-        Picasso.with(getContext()).load(posterPath).into(new Target()
+        final String[] files = {favModel.movie.getPosterPath(), favModel.movie.getBackdropPath()};
+        new Thread(new Runnable()
         {
             @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
+            public void run()
             {
-                final File dir = new File(Environment.getDataDirectory().getPath()
-                        + "/data/" + getContext().getApplicationContext().getPackageName()
-                        + "/" + context.getString(R.string.offline_directory) + "//"
-                );
-
-//                                File f = new File(Environment.getDataDirectory().getPath()
-//                                        + "/data/" + getContext().getApplicationContext().getPackageName());
-//                                boolean isThere = f.isDirectory();
-//                                Boolean writable = f.canWrite();
-                Log.d(TAG, "onBitmapLoaded: " + dir.getAbsolutePath());
-                boolean dirExists = dir.exists();
-                if (!dirExists)
+                for (String file : files)
                 {
-                    boolean createDirs = dir.mkdirs();
-                    if (!createDirs)
+                    File f = new File(Environment.getDataDirectory().getPath()
+                            + "/data/" + getContext().getApplicationContext().getPackageName()
+                            + "/" + context.getString(R.string.offline_directory) + file);
+
+
+                    if (f.exists())
                     {
-                        return;
+                        f.delete();
                     }
                 }
 
-                final File image = new File(dir + m.getPosterPath());
-                try
-                {
-                    image.createNewFile();
-                    FileOutputStream fos = new FileOutputStream(image);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
-                    Log.d(TAG, "onBitmapLoaded Image: " + image.getAbsolutePath());
-                    fos.flush();
-                    fos.close();
-
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
             }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable)
-            {
-                Toast.makeText(getContext(), "Image downloading failed", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable)
-            {
-
-            }
-        });
+        }).start();
     }
 
-    private FavouriteInsertStatus addToFavourite(View view, Movie currentMovie)
+    private void storeFavouriteImages(Favourite favModel)
+    {
+        final Movie m = favModel.movie;
+        String backdropPath = mainBackdropPrefix + m.getBackdropPath();
+        String posterPath = mainBackdropPrefix + m.getPosterPath();
+        Picasso.with(getContext()).load(posterPath).into(new SaveFavouriteImageToDisk(getContext(), m.getPosterPath()));
+        Picasso.with(getContext()).load(backdropPath).into(new SaveFavouriteImageToDisk(getContext(), m.getBackdropPath()));
+
+    }
+
+    private FavouriteInsertStatus addToFavourite(Movie currentMovie)
     {
         FavouriteInsertStatus status = checkAndInsertFavourite(currentMovie);
-        if ( status == FavouriteInsertStatus.Sucess)
+        if (status == FavouriteInsertStatus.Sucess)
         {
             // write downloading image option here
             status = FavouriteInsertStatus.Sucess;
@@ -244,7 +221,7 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
         {
             //all ui must be handled in UI thread but I m not so it will throw exception
             //Toast.makeText(getContext(), "This is already your favourite movie", Toast.LENGTH_SHORT).show();
-            status = FavouriteInsertStatus.Duplicate;
+            status = removeFavouriteMovie(m);
         }
         return status;
     }
@@ -263,7 +240,11 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
     private FavouriteInsertStatus insertFavouriteMovie(Movie currentMovie)
     {
         FavouriteInsertStatus status = FavouriteInsertStatus.Failure;
+        int index = moviesList.indexOf(currentMovie);
+        Log.d(TAG, "insertFavouriteMovie: " + index);
         currentMovie.setFavourite(true);
+        moviesList.get(index).setFavourite(true);
+//        notifyDataSetChanged();
         ContentValues favouriteValues = TheMovieDBUtils.parseMovieToContentValues(currentMovie);
         ContentResolver contentResolver = context.getContentResolver();
         Uri favUri = contentResolver.insert(MovieEntry.CONTENT_URI, favouriteValues);
@@ -282,6 +263,26 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
         return status;
     }
 
+
+    private FavouriteInsertStatus removeFavouriteMovie(Movie currentMovie)
+    {
+        FavouriteInsertStatus status = FavouriteInsertStatus.Failure;
+        currentMovie.setFavourite(false);
+        int index = moviesList.indexOf(currentMovie);
+        moviesList.get(index).setFavourite(false);
+
+//        notifyDataSetChanged();
+        ContentResolver contentResolver = context.getContentResolver();
+
+        Uri favUri = MovieEntry.buildMovieUri(String.valueOf(currentMovie.getId()));
+        int deleteStatus = contentResolver.delete(favUri, MovieEntry.MOVIE_ID + "=?", new
+                String[]{String.valueOf(currentMovie.getId())});
+
+        status = (deleteStatus != -1) ? FavouriteInsertStatus.Remove : FavouriteInsertStatus.Failure;
+
+        return status;
+
+    }
 
 }
 

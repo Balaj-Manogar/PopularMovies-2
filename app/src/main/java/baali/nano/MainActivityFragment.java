@@ -178,7 +178,10 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
         {
             movieAdapter.clear();
             movieAdapter.addAll(movieList);
-
+            for (Movie m : movieList)
+            {
+                Log.d(TAG, "process: " + m);
+            }
         }
         else
         {

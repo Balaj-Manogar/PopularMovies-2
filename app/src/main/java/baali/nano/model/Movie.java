@@ -214,6 +214,26 @@ public class Movie implements Parcelable
         this.favourite = in.readByte() != 0;
     }
 
+    @Override
+    public String toString()
+    {
+        return "Movie{" +
+                "adult=" + adult +
+                ", id=" + id +
+                ", title='" + title + '\'' +
+                ", originalTitle='" + originalTitle + '\'' +
+                ", posterPath='" + posterPath + '\'' +
+                ", backdropPath='" + backdropPath + '\'' +
+                ", overview='" + overview + '\'' +
+                ", releaseDate='" + releaseDate + '\'' +
+                ", popularity=" + popularity +
+                ", voteCount=" + voteCount +
+                ", video=" + video +
+                ", voteAverage='" + voteAverage + '\'' +
+                ", favourite=" + favourite +
+                '}';
+    }
+
     public static final Creator<Movie> CREATOR = new Creator<Movie>()
     {
         public Movie createFromParcel(Parcel source)

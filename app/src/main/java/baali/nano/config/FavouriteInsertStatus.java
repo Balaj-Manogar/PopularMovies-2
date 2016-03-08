@@ -5,5 +5,5 @@ package baali.nano.config;
  */
 public enum FavouriteInsertStatus
 {
-    Sucess, Failure, Duplicate, NoDuplicate
+    Sucess, Remove, Failure, Duplicate, NoDuplicate
 }
