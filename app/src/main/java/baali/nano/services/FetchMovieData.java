@@ -1,5 +1,7 @@
 package baali.nano.services;
 
+import android.content.Context;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -13,6 +15,8 @@ import java.util.List;
 
 import baali.nano.MainActivity;
 import baali.nano.model.Movie;
+import baali.nano.model.provider.MovieContract;
+import baali.nano.model.provider.MovieContract.MovieEntry;
 import baali.nano.utils.HttpUtils;
 import baali.nano.utils.JsonUtils;
 
@@ -27,12 +31,14 @@ public class FetchMovieData extends AsyncTask<String, Void, List<Movie>>
     private final String TAG = FetchMovieData.class.getSimpleName();
 
     private MainActivity.DelegateMovieAdapterProcess movieDelegate;
+    private Context context;
 
 
 
-    public FetchMovieData(){
+    public FetchMovieData(Context context){
         httpUtils = new HttpUtils();
         jsonUtils = new JsonUtils();
+        this.context = context;
     }
 
     public FetchMovieData(MainActivity.DelegateMovieAdapterProcess delegate){
@@ -57,8 +63,36 @@ public class FetchMovieData extends AsyncTask<String, Void, List<Movie>>
 
         JSONArray result = jsonUtils.getMovieResultsInJsonArray(data);
         List<Movie> movies = jsonUtils.parseJsonArrayToList(result, params[1], params[2]);
+        Cursor cursor = context.getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, null, null, null);
+
 
         Log.d(TAG, "Movies size: " + movies.size());
+        Log.d(TAG, "Cursor size: " + cursor.getCount());
+        if (cursor.getCount() > 0 && cursor.moveToFirst())
+        {
+            while (!cursor.isAfterLast())
+            {
+                Movie m = new Movie();
+                m.setId(cursor.getInt(cursor.getColumnIndex(MovieEntry.MOVIE_ID)));
+                m.setAdult(cursor.getInt(cursor.getColumnIndex(MovieEntry.ADULT)) > 0);
+                m.setOriginalTitle(cursor.getString(cursor.getColumnIndex(MovieEntry.ORIGINAL_TITLE)));
+                m.setPosterPath(cursor.getString(cursor.getColumnIndex(MovieEntry.POSTER_PATH)));
+                m.setBackdropPath(cursor.getString(cursor.getColumnIndex(MovieEntry.BACKDROP_PATH)));
+                m.setOverview(cursor.getString(cursor.getColumnIndex(MovieEntry.OVERVIEW)));
+                m.setReleaseDate(cursor.getString(cursor.getColumnIndex(MovieEntry.RELEASE_DATE)));
+                m.setVoteCount(cursor.getInt(cursor.getColumnIndex(MovieEntry.VOTE_COUNT)));
+                m.setVoteAverage(cursor.getString(cursor.getColumnIndex(MovieEntry.VOTE_AVERAGE)));
+                m.setPopularity(cursor.getDouble(cursor.getColumnIndex(MovieEntry.POPULARITY)));
+
+                m.setFavourite(cursor.getInt(cursor.getColumnIndex(MovieEntry.FAVOURITE)) > 0);
+                Log.d(TAG, "curMovie: " + cursor.getString(cursor.getColumnIndex(MovieEntry.FAVOURITE)));
+                Log.d(TAG, "CurMovie: " + m);
+                m.setFavourite(false);
+                Log.d(TAG, "curEqu: " + movies.contains(m));
+                Log.d(TAG, "curEqu: " + movies.get(0));
+                cursor.moveToNext();
+            }
+        }
 
 
         return movies;

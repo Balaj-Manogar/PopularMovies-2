@@ -143,9 +143,10 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
     {
         TheMovieDBUtils movieUtil = new TheMovieDBUtils(getContext());
         String sortOrder = movieUtil.getSortingOrder(option);
-        getMovieDataUsingRetrofit(sortOrder);
+        // doing multiple tasks so skipped retrofit
+        //getMovieDataUsingRetrofit(sortOrder);
 
-       //getMovieDataUsingAsyncTask(option, movieUtil);
+       getMovieDataUsingAsyncTask(option, movieUtil);
 
         Log.d(TAG, "init: " + movieUtil.buildURL(option));
         //Toast.makeText(getActivity(), movieUtil.buildURL(option), Toast.LENGTH_LONG).show();
@@ -160,7 +161,7 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
         String backdropBasePath = movieUtil.getStringResource(R.string.img_backdrop_url);
         String posterBasePath = movieUtil.getStringResource(R.string.img_poster_url);
 
-        FetchMovieData movieData = new FetchMovieData();
+        FetchMovieData movieData = new FetchMovieData(getContext());
         movieData.setMovieDelegate(this);
         movieData.execute(requestUrl, posterBasePath, backdropBasePath);
     }
@@ -178,10 +179,6 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
         {
             movieAdapter.clear();
             movieAdapter.addAll(movieList);
-            for (Movie m : movieList)
-            {
-                Log.d(TAG, "process: " + m);
-            }
         }
         else
         {
@@ -197,8 +194,6 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
         Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
         intent.putExtra("movie", moviesList.get(position));
         startActivity(intent);
-
-
     }
 
     public void getMovieDataUsingRetrofit(String order)

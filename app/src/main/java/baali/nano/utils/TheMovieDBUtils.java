@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.util.Log;
 
 import baali.nano.BuildConfig;
 import baali.nano.R;
@@ -19,6 +20,8 @@ public class TheMovieDBUtils
     private final Resources resources;
     private  String sortBy;
     private Context context;
+
+    private static final String TAG = TheMovieDBUtils.class.getSimpleName();
 
 
     public TheMovieDBUtils(Context context)
@@ -110,7 +113,8 @@ public class TheMovieDBUtils
         movieValues.put(MovieEntry.VOTE_AVERAGE, m.getVoteAverage());
         movieValues.put(MovieEntry.FAVOURITE, m.isFavourite());
 
-
+        Log.d(TAG, "parseMovieToContentValues ins: " + movieValues);
+        Log.d(TAG, "parseMovieToContentValues ins: " + m.isFavourite());
         return movieValues;
     }
 

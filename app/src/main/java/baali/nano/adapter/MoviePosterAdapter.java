@@ -97,9 +97,7 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
         final View currentView = view;
         final int position = (int) (view.getTag());
         final Movie currentMovie = moviesList.get(position);
-        Log.d(TAG, "favouriteClick: " + currentMovie);
         ImageView fav = (ImageView) view.findViewById(R.id.poster_favourite);
-        Log.d(TAG, "favouriteClicktest: before" + currentMovie);
         addOrRemoveFavouriteMovieAsync(currentView, currentMovie, fav);
         Log.d(TAG, "favouriteClicktest: after" + currentMovie);
         //moviesList.get(position).favourite
@@ -243,9 +241,8 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
         int index = moviesList.indexOf(currentMovie);
         Log.d(TAG, "insertFavouriteMovie: " + index);
         currentMovie.setFavourite(true);
-        moviesList.get(index).setFavourite(true);
-//        notifyDataSetChanged();
         ContentValues favouriteValues = TheMovieDBUtils.parseMovieToContentValues(currentMovie);
+        Log.d(TAG, "insertFavouriteMovie bfins: " + favouriteValues);
         ContentResolver contentResolver = context.getContentResolver();
         Uri favUri = contentResolver.insert(MovieEntry.CONTENT_URI, favouriteValues);
 
@@ -270,7 +267,7 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
         currentMovie.setFavourite(false);
         int index = moviesList.indexOf(currentMovie);
         moviesList.get(index).setFavourite(false);
-
+//
 //        notifyDataSetChanged();
         ContentResolver contentResolver = context.getContentResolver();
 
