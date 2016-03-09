@@ -3,7 +3,6 @@ package baali.nano.services;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import org.json.JSONArray;
 
@@ -65,9 +64,6 @@ public class FetchMovieData extends AsyncTask<String, Void, List<Movie>>
         List<Movie> movies = jsonUtils.parseJsonArrayToList(result, params[1], params[2]);
         Cursor cursor = context.getContentResolver().query(MovieContract.MovieEntry.CONTENT_URI, null, null, null, null);
 
-
-        Log.d(TAG, "Movies size: " + movies.size());
-        Log.d(TAG, "Cursor size: " + cursor.getCount());
         if (cursor.getCount() > 0 && cursor.moveToFirst())
         {
             while (!cursor.isAfterLast())
@@ -83,13 +79,13 @@ public class FetchMovieData extends AsyncTask<String, Void, List<Movie>>
                 m.setVoteCount(cursor.getInt(cursor.getColumnIndex(MovieEntry.VOTE_COUNT)));
                 m.setVoteAverage(cursor.getString(cursor.getColumnIndex(MovieEntry.VOTE_AVERAGE)));
                 m.setPopularity(cursor.getDouble(cursor.getColumnIndex(MovieEntry.POPULARITY)));
-
                 m.setFavourite(cursor.getInt(cursor.getColumnIndex(MovieEntry.FAVOURITE)) > 0);
-                Log.d(TAG, "curMovie: " + cursor.getString(cursor.getColumnIndex(MovieEntry.FAVOURITE)));
-                Log.d(TAG, "CurMovie: " + m);
-                m.setFavourite(false);
-                Log.d(TAG, "curEqu: " + movies.contains(m));
-                Log.d(TAG, "curEqu: " + movies.get(0));
+
+                if (movies.contains(m))
+                {
+                    int movieIndex = movies.indexOf(m);
+                    movies.set(movieIndex, m);
+                }
                 cursor.moveToNext();
             }
         }

@@ -234,6 +234,30 @@ public class Movie implements Parcelable
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
+
+        Movie movie = (Movie) o;
+
+        return id == movie.id;
+
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return (int) (id ^ (id >>> 32));
+    }
+
     public static final Creator<Movie> CREATOR = new Creator<Movie>()
     {
         public Movie createFromParcel(Parcel source)

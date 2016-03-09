@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +43,7 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
     private final Context context;
     private int layoutResourceId;
     private List<Movie> moviesList;
-    private int currentPosition;
+    private int currentPosition = 0;
 
     private static final String FAV = "fav";
 
@@ -67,28 +66,43 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        currentPosition = position;
         View row = convertView;
-        Movie movie = moviesList.get(position);
         if (row == null)
         {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             row = inflater.inflate(layoutResourceId, parent, false);
         }
+        Movie movie = moviesList.get(position);
         ButterKnife.bind(this, row);
+
         favImage.setTag(position);
-        //ImageView imageView = (ImageView) row.findViewById(R.id.img_poster);
+
+        modifyIconForFavouriteMovies(row);
 
         String posterPath = mainBackdropPrefix + movie.getPosterPath();
         Picasso.with(this.context).load(posterPath)
                 .placeholder(R.drawable.main_default_poster_drawable)
                 .error(R.drawable.main_error_poster_drawable)
                 .into(imageView);
-        Log.d(TAG, "getView: " + row);
 
-        //ImageView imageView = (ImageView) convertView.findViewById(R.id.main_poster_img);
-        //Picasso.with(getContext()).load(movie.getPosterPath()).into(imageView);
         return row;
+    }
+
+    private void modifyIconForFavouriteMovies(View row)
+    {
+        int tag = (int) favImage.getTag();
+
+        Movie scrollMovie = moviesList.get(tag);
+        if (scrollMovie.isFavourite())
+        {
+            ImageView iv = (ImageView) row.findViewById(R.id.poster_favourite);
+            iv.setImageResource(R.drawable.fav_filled);
+        }
+        else
+        {
+            ImageView iv = (ImageView) row.findViewById(R.id.poster_favourite);
+            iv.setImageResource(R.drawable.fav_outline);
+        }
     }
 
     @OnClick(R.id.poster_favourite)
@@ -98,13 +112,11 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
         final int position = (int) (view.getTag());
         final Movie currentMovie = moviesList.get(position);
         ImageView fav = (ImageView) view.findViewById(R.id.poster_favourite);
-        addOrRemoveFavouriteMovieAsync(currentView, currentMovie, fav);
-        Log.d(TAG, "favouriteClicktest: after" + currentMovie);
-        //moviesList.get(position).favourite
+        toggleFavourite(currentView, currentMovie, fav);
     }
 
 
-    private void addOrRemoveFavouriteMovieAsync(final View currentView, final Movie currentMovie, ImageView fav)
+    private void toggleFavourite(final View currentView, final Movie currentMovie, ImageView fav)
     {
         final ImageView imageView = (ImageView) currentView;
         AsyncTask<Void, Void, Favourite> task = new AsyncTask<Void, Void, Favourite>()
@@ -126,23 +138,21 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
             {
                 favModel.view = currentView;
                 ImageView iv = (ImageView) favModel.view;
-                Log.d(TAG, "onPostExecuteequals: " + moviesList.contains(favModel.movie));
-                favourite(favModel, iv);
-
+                executeByFavouriteState(favModel, iv);
             }
         };
 
         task.execute();
     }
 
-    private void favourite(Favourite favModel, ImageView iv)
+    private void executeByFavouriteState(Favourite favModel, ImageView iv)
     {
         switch (favModel.status)
         {
             case Sucess:
             {
                 iv.setImageResource(R.drawable.fav_filled);
-                storeFavouriteImages(favModel);
+                downloadImagesAndSaveToDisk(favModel);
                 Toast.makeText(getContext(), "Added to favourite", Toast.LENGTH_LONG).show();
                 break;
             }
@@ -185,7 +195,7 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
         }).start();
     }
 
-    private void storeFavouriteImages(Favourite favModel)
+    private void downloadImagesAndSaveToDisk(Favourite favModel)
     {
         final Movie m = favModel.movie;
         String backdropPath = mainBackdropPrefix + m.getBackdropPath();
@@ -200,7 +210,6 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
         FavouriteInsertStatus status = checkAndInsertFavourite(currentMovie);
         if (status == FavouriteInsertStatus.Sucess)
         {
-            // write downloading image option here
             status = FavouriteInsertStatus.Sucess;
         }
 
@@ -212,13 +221,10 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
         FavouriteInsertStatus status;
         if (getFavouriteStatus(m) == FavouriteInsertStatus.NoDuplicate)
         {
-
             status = insertFavouriteMovie(m);
         }
         else
         {
-            //all ui must be handled in UI thread but I m not so it will throw exception
-            //Toast.makeText(getContext(), "This is already your favourite movie", Toast.LENGTH_SHORT).show();
             status = removeFavouriteMovie(m);
         }
         return status;
@@ -239,10 +245,8 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
     {
         FavouriteInsertStatus status = FavouriteInsertStatus.Failure;
         int index = moviesList.indexOf(currentMovie);
-        Log.d(TAG, "insertFavouriteMovie: " + index);
         currentMovie.setFavourite(true);
         ContentValues favouriteValues = TheMovieDBUtils.parseMovieToContentValues(currentMovie);
-        Log.d(TAG, "insertFavouriteMovie bfins: " + favouriteValues);
         ContentResolver contentResolver = context.getContentResolver();
         Uri favUri = contentResolver.insert(MovieEntry.CONTENT_URI, favouriteValues);
 
@@ -267,8 +271,7 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
         currentMovie.setFavourite(false);
         int index = moviesList.indexOf(currentMovie);
         moviesList.get(index).setFavourite(false);
-//
-//        notifyDataSetChanged();
+
         ContentResolver contentResolver = context.getContentResolver();
 
         Uri favUri = MovieEntry.buildMovieUri(String.valueOf(currentMovie.getId()));

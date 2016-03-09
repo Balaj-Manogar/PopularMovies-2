@@ -106,6 +106,7 @@ public class TheMovieDBUtils
         movieValues.put(MovieEntry.ADULT, m.isAdult());
         movieValues.put(MovieEntry.ORIGINAL_TITLE, m.getOriginalTitle());
         movieValues.put(MovieEntry.POSTER_PATH, m.getPosterPath());
+        movieValues.put(MovieEntry.BACKDROP_PATH, m.getBackdropPath());
         movieValues.put(MovieEntry.OVERVIEW, m.getOverview());
         movieValues.put(MovieEntry.RELEASE_DATE, m.getReleaseDate());
         movieValues.put(MovieEntry.POPULARITY, m.getPopularity());
