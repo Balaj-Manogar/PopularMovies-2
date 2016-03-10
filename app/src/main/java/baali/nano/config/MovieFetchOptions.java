@@ -5,5 +5,5 @@ package baali.nano.config;
  */
 public enum MovieFetchOptions
 {
-    Popular, Rating
+    Popular, Rating, Favourite
 }

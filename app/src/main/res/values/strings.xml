@@ -5,6 +5,7 @@
     <!-- Menu-->
     <string name="action_popular">Sort by Popular</string>
     <string name="action_rated">Sort by Rating</string>
+    <string name="action_favourite">Favourite</string>
 
 
     <!-- Fetch Movie Data -->

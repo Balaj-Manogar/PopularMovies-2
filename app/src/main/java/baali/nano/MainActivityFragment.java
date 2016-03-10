@@ -39,13 +39,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment  implements MainActivity.DelegateMovieAdapterProcess<Movie>
+public class MainActivityFragment extends Fragment implements MainActivity.DelegateMovieAdapterProcess<Movie>
         , AdapterView.OnItemClickListener
 {
     @BindString(R.string.q_retrofit_base_url)
     String baseUrl;
     private final String TAG = MainActivityFragment.class.getSimpleName();
-    private  List<Movie> moviesList;
+    private List<Movie> moviesList;
     private ArrayAdapter movieAdapter;
     private GridView gridMoviePoster;
 
@@ -71,7 +71,7 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState)
+                             Bundle savedInstanceState)
     {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, rootView);
@@ -92,13 +92,14 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
 
     private void checkBundleAndProcess(Bundle savedInstanceState)
     {
-        if(savedInstanceState != null)
+        if (savedInstanceState != null)
         {
             Log.d(TAG, "Bundled: " + savedInstanceState.getParcelableArrayList("MovieList"));
             moviesList = savedInstanceState.getParcelableArrayList("MovieList");
             process(moviesList);
         }
-        else {
+        else
+        {
 
             populateGridView(MovieFetchOptions.Popular);
         }
@@ -126,6 +127,11 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
                 populateGridView(MovieFetchOptions.Rating);
                 break;
             }
+            case R.id.action_favourite:
+            {
+                populateGridView(MovieFetchOptions.Favourite);
+                break;
+            }
 
         }
         return true;
@@ -146,7 +152,7 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
         // doing multiple tasks so skipped retrofit
         //getMovieDataUsingRetrofit(sortOrder);
 
-       getMovieDataUsingAsyncTask(option, movieUtil);
+        getMovieDataUsingAsyncTask(option, movieUtil);
 
         Log.d(TAG, "init: " + movieUtil.buildURL(option));
         //Toast.makeText(getActivity(), movieUtil.buildURL(option), Toast.LENGTH_LONG).show();
@@ -155,14 +161,22 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
 
     private void getMovieDataUsingAsyncTask(MovieFetchOptions option, TheMovieDBUtils movieUtil)
     {
-        String requestUrl = movieUtil.buildURL(option);
 
-
+        String requestUrl = "";
         String backdropBasePath = movieUtil.getStringResource(R.string.img_backdrop_url);
         String posterBasePath = movieUtil.getStringResource(R.string.img_poster_url);
 
         FetchMovieData movieData = new FetchMovieData(getContext());
         movieData.setMovieDelegate(this);
+
+        if (MovieFetchOptions.Favourite == option)
+        {
+            movieData.setLoadType(option);
+        }
+        else
+        {
+            requestUrl = movieUtil.buildURL(option);
+        }
         movieData.execute(requestUrl, posterBasePath, backdropBasePath);
     }
 
@@ -175,7 +189,7 @@ public class MainActivityFragment extends Fragment  implements MainActivity.Dele
     @Override
     public void process(List<? extends Movie> movieList)
     {
-        if(movieList.size() > 0)
+        if (movieList.size() > 0)
         {
             movieAdapter.clear();
             movieAdapter.addAll(movieList);
