@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import baali.nano.adapter.MoviePosterAdapter;
+import baali.nano.config.AppFetchStatus;
 import baali.nano.config.MovieFetchOptions;
 import baali.nano.model.Movie;
 import baali.nano.model.MovieAPIResponse;
@@ -119,16 +120,19 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
         {
             case R.id.action_popular:
             {
+                AppFetchStatus.setState(MovieFetchOptions.Popular);
                 populateGridView(MovieFetchOptions.Popular);
                 break;
             }
             case R.id.action_rating:
             {
+                AppFetchStatus.setState(MovieFetchOptions.Rating);
                 populateGridView(MovieFetchOptions.Rating);
                 break;
             }
             case R.id.action_favourite:
             {
+                AppFetchStatus.setState(MovieFetchOptions.Favourite);
                 populateGridView(MovieFetchOptions.Favourite);
                 break;
             }
@@ -254,4 +258,6 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
         httpClient.addInterceptor(logging);
         return httpClient;
     }
+
+
 }

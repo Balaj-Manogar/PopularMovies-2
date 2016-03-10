@@ -5,10 +5,12 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +23,11 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.util.List;
 
+import baali.nano.MainActivity;
 import baali.nano.R;
+import baali.nano.config.AppFetchStatus;
 import baali.nano.config.FavouriteInsertStatus;
+import baali.nano.config.MovieFetchOptions;
 import baali.nano.model.Favourite;
 import baali.nano.model.Movie;
 import baali.nano.model.provider.MovieContract.MovieEntry;
@@ -42,24 +47,30 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
 
     private final Context context;
     private int layoutResourceId;
-    private List<Movie> moviesList;
-    private int currentPosition = 0;
 
+    private List<Movie> moviesList;
+
+    private int currentPosition = 0;
     private static final String FAV = "fav";
 
     @BindString(R.string.img_backdrop_url)
     String mainBackdropPrefix;
+
     @Bind(R.id.img_poster)
     ImageView imageView;
     @Bind(R.id.poster_favourite)
     ImageView favImage;
-
     public MoviePosterAdapter(Context context, int resource, List<Movie> moviesList)
     {
         super(context, R.layout.grid_main_poster, moviesList);
         this.context = context;
         this.layoutResourceId = resource;
         this.moviesList = moviesList;
+    }
+
+    public List<Movie> getMoviesList()
+    {
+        return moviesList;
     }
 
 
@@ -159,14 +170,39 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
             case Remove:
             {
                 removeFavouriteImages(favModel);
-                iv.setImageResource(R.drawable.fav_outline);
                 Toast.makeText(getContext(), "Removed from favourite", Toast.LENGTH_LONG).show();
+                if (AppFetchStatus.getState() == MovieFetchOptions.Favourite)
+                {
+                    int favMovieIndex = moviesList.indexOf(favModel.movie);
+                    if (favMovieIndex != -1)
+                    {
+                        moviesList.remove(favMovieIndex);
+                        Log.d(TAG, "executeByFavouriteState: " + moviesList.size());
+                        notifyDataSetChanged();
+                        redirectIfEmpty(favModel);
+                    }
+                }
+                else
+                {
+                    iv.setImageResource(R.drawable.fav_outline);
+                }
                 break;
             }
             case Failure:
             {
                 Toast.makeText(getContext(), "Error: tap again", Toast.LENGTH_LONG).show();
             }
+        }
+    }
+
+    private void redirectIfEmpty(Favourite favModel)
+    {
+        if(moviesList.size() < 1)
+        {
+            // I dont know whether this is correct or not, please give feedback
+            Log.d(TAG, "executeByFavouriteState: ");
+            Intent intent = new Intent(favModel.view.getContext(), MainActivity.class);
+            favModel.view.getContext().startActivity(intent);
         }
     }
 
