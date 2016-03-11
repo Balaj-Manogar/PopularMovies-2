@@ -24,7 +24,7 @@ import java.util.List;
 
 import baali.nano.MainActivity;
 import baali.nano.R;
-import baali.nano.config.AppFetchStatus;
+import baali.nano.config.AppStatus;
 import baali.nano.config.FavouriteInsertStatus;
 import baali.nano.config.MovieFetchOptions;
 import baali.nano.model.Favourite;
@@ -89,10 +89,16 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
 
         modifyIconForFavouriteMovies(row);
 
-        String posterPath = mainBackdropPrefix + movie.getPosterPath();
-        if (AppFetchStatus.getState() == MovieFetchOptions.Favourite)
+        loadImageFromLocalOrOnline(movie);
+
+        return row;
+    }
+
+    private void loadImageFromLocalOrOnline(Movie movie)
+    {
+        if (AppStatus.getState() == MovieFetchOptions.Favourite)
         {
-            String localPath = AppFetchStatus.getLocalStoragePath(getContext()) + movie.getPosterPath();
+            String localPath = AppStatus.getLocalStoragePath(getContext()) + movie.getPosterPath();
             Picasso.with(this.context).load(new File(localPath))
                     .placeholder(R.drawable.main_default_poster_drawable)
                     .error(R.drawable.main_error_poster_drawable)
@@ -101,13 +107,12 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
         }
         else
         {
+            String posterPath = mainBackdropPrefix + movie.getPosterPath();
             Picasso.with(this.context).load(posterPath)
                     .placeholder(R.drawable.main_default_poster_drawable)
                     .error(R.drawable.main_error_poster_drawable)
                     .into(imageView);
         }
-
-        return row;
     }
 
     private void modifyIconForFavouriteMovies(View row)
@@ -182,7 +187,7 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
             {
                 removeFavouriteImages(favModel);
                 Toast.makeText(getContext(), "Removed from favourite", Toast.LENGTH_LONG).show();
-                if (AppFetchStatus.getState() == MovieFetchOptions.Favourite)
+                if (AppStatus.getState() == MovieFetchOptions.Favourite)
                 {
                     int favMovieIndex = moviesList.indexOf(favModel.movie);
                     if (favMovieIndex != -1)
@@ -227,7 +232,7 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
             {
                 for (String file : files)
                 {
-                    String localPath = AppFetchStatus.getLocalStoragePath(getContext());
+                    String localPath = AppStatus.getLocalStoragePath(getContext());
                     File f = new File(localPath + file);
 
 

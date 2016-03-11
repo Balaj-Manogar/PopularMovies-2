@@ -8,7 +8,7 @@ import baali.nano.R;
 /**
  * Created by Balaji on 10/03/16.
  */
-public class AppFetchStatus
+public class AppStatus
 {
     private static MovieFetchOptions state;
 
@@ -19,7 +19,7 @@ public class AppFetchStatus
 
     public static void setState(MovieFetchOptions state)
     {
-        AppFetchStatus.state = state;
+        AppStatus.state = state;
     }
 
     public static String getLocalStoragePath(Context context)

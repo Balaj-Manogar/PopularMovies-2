@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import baali.nano.config.AppFetchStatus;
+import baali.nano.config.AppStatus;
 
 /**
  * Created by Balaji on 07/03/16.
@@ -43,7 +43,7 @@ public class SaveFavouriteImageToDisk implements Target
             @Override
             public void run()
             {
-                String localPath = AppFetchStatus.getLocalStoragePath(context);
+                String localPath = AppStatus.getLocalStoragePath(context);
                 final File dir = new File(localPath);
 
 //                                File f = new File(Environment.getDataDirectory().getPath()
