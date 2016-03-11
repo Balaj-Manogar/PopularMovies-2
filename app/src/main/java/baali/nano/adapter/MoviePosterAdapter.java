@@ -213,12 +213,20 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
 
     private void redirectIfEmpty(Favourite favModel)
     {
-        if(moviesList.size() < 1)
+        if(moviesList.size() < 1  )
         {
-            // I dont know whether this is correct or not, please give feedback
-            Log.d(TAG, "executeByFavouriteState: ");
-            Intent intent = new Intent(favModel.view.getContext(), MainActivity.class);
-            favModel.view.getContext().startActivity(intent);
+            if(AppStatus.isOnline(getContext()))
+            {
+                // I dont know whether this is correct or not, please give feedback
+                Log.d(TAG, "executeByFavouriteState: ");
+                Intent intent = new Intent(favModel.view.getContext(), MainActivity.class);
+                AppStatus.setState(MovieFetchOptions.Popular);
+                favModel.view.getContext().startActivity(intent);
+            }
+            else
+            {
+//                new AlertDialog.Builder()
+            }
         }
     }
 

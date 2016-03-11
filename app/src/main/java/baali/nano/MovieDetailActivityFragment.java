@@ -12,6 +12,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+
+import baali.nano.config.AppStatus;
+import baali.nano.config.MovieFetchOptions;
 import baali.nano.model.Movie;
 import butterknife.Bind;
 import butterknife.BindString;
@@ -84,11 +88,23 @@ public class MovieDetailActivityFragment extends Fragment
 
         Log.d(TAG, "putMovieDataIntoViews: " + movie);
         // download image and map to view
-        String backdropPath = detailBackdropPrefix + movie.getBackdropPath();
-        Picasso.with(getContext()).load(backdropPath)
-                .placeholder(R.drawable.main_default_poster_drawable)
-                .error(R.drawable.main_error_poster_drawable)
-                .into(poster);
+
+        if(AppStatus.getState() == MovieFetchOptions.Favourite && !AppStatus.isOnline(getContext()))
+        {
+            String localPath = AppStatus.getLocalStoragePath(getContext()) + movie.getBackdropPath();
+            Picasso.with(getContext()).load(new File(localPath))
+                    .placeholder(R.drawable.main_default_poster_drawable)
+                    .error(R.drawable.main_error_poster_drawable)
+                    .into(poster);
+        }
+        else
+        {
+            String backdropPath = detailBackdropPrefix + movie.getBackdropPath();
+            Picasso.with(getContext()).load(backdropPath)
+                    .placeholder(R.drawable.main_default_poster_drawable)
+                    .error(R.drawable.main_error_poster_drawable)
+                    .into(poster);
+        }
         title.setText(movie.getTitle());
         releaseDate.setText(movie.getReleaseDate());
         voteAverage.setRating(Float.valueOf(movie.getVoteAverage()) / 2f);

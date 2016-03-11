@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity
     protected void onStart()
     {
 
-        Log.d(TAG, "onStart: " + getApplicationContext().getResources().getString(R.string.q_api_key));
         super.onStart();
     }
 

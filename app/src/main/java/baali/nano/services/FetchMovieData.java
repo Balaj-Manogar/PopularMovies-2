@@ -99,6 +99,7 @@ public class FetchMovieData extends AsyncTask<String, Void, List<Movie>>
                     cursor.moveToNext();
                 }
             }
+
         }
         return movies;
     }

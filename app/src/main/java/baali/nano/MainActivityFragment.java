@@ -15,12 +15,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import baali.nano.adapter.MoviePosterAdapter;
-import baali.nano.config.AppFetchStatus;
+import baali.nano.config.AppStatus;
 import baali.nano.config.MovieFetchOptions;
 import baali.nano.model.Movie;
 import baali.nano.model.MovieAPIResponse;
@@ -60,6 +61,8 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
     {
         super.onStart();
         //FetchMovieData movieData = new FetchMovieData();
+        Log.d(TAG, "onStart APP: " + AppStatus.getState() + " ::: " + moviesList);
+
 
     }
 
@@ -93,17 +96,28 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
 
     private void checkBundleAndProcess(Bundle savedInstanceState)
     {
-        if (savedInstanceState != null)
+        Log.d(TAG, "checkBundleAndProcess: ");
+        if (AppStatus.isOnline(getContext()))
         {
-            Log.d(TAG, "Bundled: " + savedInstanceState.getParcelableArrayList("MovieList"));
-            moviesList = savedInstanceState.getParcelableArrayList("MovieList");
-            process(moviesList);
+            if (savedInstanceState != null)
+            {
+                Log.d(TAG, "Bundled: " + savedInstanceState.getParcelableArrayList("MovieList"));
+                moviesList = savedInstanceState.getParcelableArrayList("MovieList");
+                process(moviesList);
+            }
+            else
+            {
+                // this code will work on coming back from detail Activity
+                MovieFetchOptions option = AppStatus.getState() == null ? MovieFetchOptions.Popular : AppStatus.getState();
+                populateGridView(option);
+            }
         }
         else
         {
-
-            populateGridView(MovieFetchOptions.Popular);
+            AppStatus.setState(MovieFetchOptions.Favourite);
+            populateGridView(MovieFetchOptions.Favourite);
         }
+
     }
 
     @Override
@@ -120,19 +134,19 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
         {
             case R.id.action_popular:
             {
-                AppFetchStatus.setState(MovieFetchOptions.Popular);
+                AppStatus.setState(MovieFetchOptions.Popular);
                 populateGridView(MovieFetchOptions.Popular);
                 break;
             }
             case R.id.action_rating:
             {
-                AppFetchStatus.setState(MovieFetchOptions.Rating);
+                AppStatus.setState(MovieFetchOptions.Rating);
                 populateGridView(MovieFetchOptions.Rating);
                 break;
             }
             case R.id.action_favourite:
             {
-                AppFetchStatus.setState(MovieFetchOptions.Favourite);
+                AppStatus.setState(MovieFetchOptions.Favourite);
                 populateGridView(MovieFetchOptions.Favourite);
                 break;
             }
@@ -193,15 +207,17 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
     @Override
     public void process(List<? extends Movie> movieList)
     {
-        if (movieList.size() > 0)
+        if (movieList != null && movieList.size() > 0)
         {
             movieAdapter.clear();
             movieAdapter.addAll(movieList);
         }
         else
         {
-//            handle here for no movies
+            Toast.makeText(getContext(), "No movies found", Toast.LENGTH_LONG).show();
+            AppStatus.setState(MovieFetchOptions.Popular);
         }
+
     }
 
 

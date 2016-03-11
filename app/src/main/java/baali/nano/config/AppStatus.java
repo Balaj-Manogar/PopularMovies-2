@@ -1,6 +1,8 @@
 package baali.nano.config;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 
 import baali.nano.R;
@@ -28,4 +30,14 @@ public class AppStatus
             + "/data/" + context.getApplicationContext().getPackageName()
             + "/" + context.getString(R.string.offline_directory) ;
     }
+
+    public static boolean isOnline(Context context)
+    {
+        boolean status=false;
+        ConnectivityManager cm=(ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo connectivity = cm.getActiveNetworkInfo();
+        status = (connectivity == null) ? false : true;
+        return status;
+    }
+
 }
