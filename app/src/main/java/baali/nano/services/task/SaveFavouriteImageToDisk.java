@@ -3,7 +3,6 @@ package baali.nano.services.task;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.os.Environment;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -14,7 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import baali.nano.R;
+import baali.nano.config.AppFetchStatus;
 
 /**
  * Created by Balaji on 07/03/16.
@@ -44,10 +43,8 @@ public class SaveFavouriteImageToDisk implements Target
             @Override
             public void run()
             {
-                final File dir = new File(Environment.getDataDirectory().getPath()
-                        + "/data/" + getContext().getApplicationContext().getPackageName()
-                        + "/" + context.getString(R.string.offline_directory) + "//"
-                );
+                String localPath = AppFetchStatus.getLocalStoragePath(context);
+                final File dir = new File(localPath);
 
 //                                File f = new File(Environment.getDataDirectory().getPath()
 //                                        + "/data/" + getContext().getApplicationContext().getPackageName());

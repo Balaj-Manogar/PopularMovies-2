@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,10 +90,22 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
         modifyIconForFavouriteMovies(row);
 
         String posterPath = mainBackdropPrefix + movie.getPosterPath();
-        Picasso.with(this.context).load(posterPath)
-                .placeholder(R.drawable.main_default_poster_drawable)
-                .error(R.drawable.main_error_poster_drawable)
-                .into(imageView);
+        if (AppFetchStatus.getState() == MovieFetchOptions.Favourite)
+        {
+            String localPath = AppFetchStatus.getLocalStoragePath(getContext()) + movie.getPosterPath();
+            Picasso.with(this.context).load(new File(localPath))
+                    .placeholder(R.drawable.main_default_poster_drawable)
+                    .error(R.drawable.main_error_poster_drawable)
+                    .into(imageView);
+            Log.d(TAG, "getView: " + localPath);
+        }
+        else
+        {
+            Picasso.with(this.context).load(posterPath)
+                    .placeholder(R.drawable.main_default_poster_drawable)
+                    .error(R.drawable.main_error_poster_drawable)
+                    .into(imageView);
+        }
 
         return row;
     }
@@ -216,9 +227,8 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
             {
                 for (String file : files)
                 {
-                    File f = new File(Environment.getDataDirectory().getPath()
-                            + "/data/" + getContext().getApplicationContext().getPackageName()
-                            + "/" + context.getString(R.string.offline_directory) + file);
+                    String localPath = AppFetchStatus.getLocalStoragePath(getContext());
+                    File f = new File(localPath + file);
 
 
                     if (f.exists())
