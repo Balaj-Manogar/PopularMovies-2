@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity
 
 
         Log.d(TAG, "onCreate: " + BuildConfig.THE_MOVIE_DB_API_KEY);
-
+        String s = "lk";
 
     }
 

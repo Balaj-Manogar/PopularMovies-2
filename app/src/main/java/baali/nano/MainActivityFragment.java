@@ -87,6 +87,16 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
         return rootView;
     }
 
+    public static MainActivityFragment newInstance()
+    {
+
+//        Bundle args = new Bundle();
+
+        MainActivityFragment fragment = new MainActivityFragment();
+//        fragment.setArguments(args);
+        return fragment;
+    }
+
     private void bridgeGridViewWithAdapter(View rootView)
     {
         gridMoviePoster = (GridView) rootView.findViewById(R.id.grid_poster);

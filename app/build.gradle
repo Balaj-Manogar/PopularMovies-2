@@ -4,6 +4,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
+
     defaultConfig {
         applicationId "baali.nano"
         minSdkVersion 15
@@ -18,18 +19,19 @@ android {
         }
     }
     buildTypes.each {
-        it.buildConfigField "String", "THE_MOVIE_DB_API_KEY", "\"f33370f35e7da08f21743dd3cf447830\""
+        it.buildConfigField "String", "THE_MOVIE_DB_API_KEY", "\"\""
     }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.2.0'
-    compile 'com.android.support:design:23.2.0'
+    compile 'com.android.support:appcompat-v7:23.2.1'
+    compile 'com.android.support:design:23.2.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
     compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
+    compile 'com.android.support:support-v4:23.2.1'
 }

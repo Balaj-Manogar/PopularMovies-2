@@ -49,6 +49,16 @@ public class MovieDetailActivityFragment extends Fragment
 
     }
 
+    public static MovieDetailActivityFragment newInstance()
+    {
+
+//        Bundle args = new Bundle();
+
+        MovieDetailActivityFragment fragment = new MovieDetailActivityFragment();
+//        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
