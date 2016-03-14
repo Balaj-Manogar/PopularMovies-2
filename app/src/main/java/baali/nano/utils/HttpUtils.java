@@ -11,6 +11,9 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+
 public class HttpUtils
 {
     public HttpUtils()
@@ -74,6 +77,18 @@ public class HttpUtils
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @NonNull
+    public static OkHttpClient.Builder getDebugBuilder()
+    {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+
+        httpClient.addInterceptor(logging);
+        return httpClient;
     }
 
 }

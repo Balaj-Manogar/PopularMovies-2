@@ -3,7 +3,6 @@ package baali.nano;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,11 +26,11 @@ import baali.nano.model.Movie;
 import baali.nano.model.MovieAPIResponse;
 import baali.nano.services.FetchMovieData;
 import baali.nano.services.rest.TheMovieAPIService;
+import baali.nano.utils.HttpUtils;
 import baali.nano.utils.TheMovieDBUtils;
 import butterknife.BindString;
 import butterknife.ButterKnife;
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -243,7 +242,7 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
     public void getMovieDataUsingRetrofit(String order)
     {
         // retrofit debug purpose
-        OkHttpClient.Builder httpClient = getDebugBuilder();
+        OkHttpClient.Builder httpClient = HttpUtils.getDebugBuilder();
 
         Retrofit apiService = new Retrofit.Builder().baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -273,17 +272,7 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
         });
     }
 
-    @NonNull
-    private OkHttpClient.Builder getDebugBuilder()
-    {
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-        httpClient.addInterceptor(logging);
-        return httpClient;
-    }
 
 
 }
