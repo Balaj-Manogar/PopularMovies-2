@@ -46,7 +46,6 @@ public class MovieDetailActivity extends AppCompatActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
-        getMovieVideoUsingRetrofit();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

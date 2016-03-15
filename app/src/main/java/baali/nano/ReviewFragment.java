@@ -81,7 +81,7 @@ public class ReviewFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        View rootView = inflater.inflate(R.layout.review_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_review, container, false);
         ButterKnife.bind(this, rootView);
         if (savedInstanceState != null)
         {
