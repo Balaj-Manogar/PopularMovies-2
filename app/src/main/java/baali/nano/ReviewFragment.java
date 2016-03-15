@@ -50,7 +50,7 @@ public class ReviewFragment extends Fragment
     String baseUrl;
 
     @Nullable
-    @Bind(R.layout.list_movie_review)
+    @Bind(R.id.review_list_view)
     ListView reviewListView;
 
     private ArrayAdapter<MovieReview> reviewAdapter;
@@ -80,7 +80,7 @@ public class ReviewFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        View rootView = inflater.inflate(R.layout.fragment_fragment2, container, false);
+        View rootView = inflater.inflate(R.layout.review_fragment, container, false);
         ButterKnife.bind(this, rootView);
         getMovieReviewUsingRetrofit();
 
@@ -123,9 +123,12 @@ public class ReviewFragment extends Fragment
                 Log.d(TAG, "onResponse: Retro: " + reviewCount);
                 if (reviewCount > 0)
                 {
+
                     reviews = new ArrayList<MovieReview>(apiMovieReviewsList);
                     reviewAdapter = new ReviewAdapter(getContext(), R.layout.list_movie_review, reviews);
                     reviewListView.setAdapter(reviewAdapter);
+                    Log.d(TAG, "onResponse: list size: " + reviews.size());
+
                 }
                 else
                 {

@@ -25,11 +25,7 @@ public class ReviewAdapter extends ArrayAdapter<MovieReview>
     private Context context;
     private final int layoutId;
 
-    @Bind(R.id.review_author)
-    TextView reviewAuthorView;
 
-    @Bind(R.id.review_content)
-    TextView reviewContentView;
 
     public ReviewAdapter(Context context, int resource, List<MovieReview> reviews)
     {
@@ -42,16 +38,40 @@ public class ReviewAdapter extends ArrayAdapter<MovieReview>
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        View view = convertView;
-        if (view == null)
+        View view;
+        ReviewHolder reviewHolder;
+        if (convertView == null)
         {
             LayoutInflater inflater = ((Activity) context).getLayoutInflater();
-            inflater.inflate(layoutId, parent, false);
+            view = inflater.inflate(layoutId, parent, false);
+            reviewHolder = new ReviewHolder(view);
+            view.setTag(reviewHolder);
         }
-        ButterKnife.bind(this, view);
+        else
+        {
+            view = convertView;
+            reviewHolder = (ReviewHolder) view.getTag();
+        }
+
+
         MovieReview review = reviews.get(position);
-        reviewAuthorView.setText(review.getAuthor());
-        reviewContentView.setText(review.getContent());
+        reviewHolder.reviewAuthorView.setText(review.getAuthor());
+        reviewHolder.reviewContentView.setText(review.getContent());
+
         return view;
+    }
+
+    static class ReviewHolder
+    {
+        @Bind(R.id.review_author)
+        TextView reviewAuthorView;
+
+        @Bind(R.id.review_content)
+        TextView reviewContentView;
+
+        ReviewHolder(View view)
+        {
+            ButterKnife.bind(this, view);
+        }
     }
 }

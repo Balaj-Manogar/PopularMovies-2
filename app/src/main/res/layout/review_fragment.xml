@@ -11,4 +11,9 @@
         android:layout_gravity="center"
         android:text="Hello Fragment 2!" />
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/review_list_view"/>
+
 </FrameLayout>
