@@ -2,6 +2,7 @@ package baali.nano;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -82,19 +83,28 @@ public class ReviewFragment extends Fragment
     {
         View rootView = inflater.inflate(R.layout.review_fragment, container, false);
         ButterKnife.bind(this, rootView);
-        getMovieReviewUsingRetrofit();
+        if (savedInstanceState != null)
+        {
+            reviews = savedInstanceState.getParcelableArrayList("MovieReviewList");
+
+            reviewAdapter = new ReviewAdapter(getContext(), R.layout.list_movie_review, reviews);
+            reviewListView.setAdapter(reviewAdapter);
+            Log.d(TAG, "onCreateView: from saved instance");
+        }
+        else
+        {
+            getMovieReviewUsingRetrofit();
+        }
 
 
         return rootView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri)
+    @Override
+    public void onSaveInstanceState(Bundle outState)
     {
-        if (mListener != null)
-        {
-            mListener.onFragmentInteraction(uri);
-        }
+        outState.putParcelableArrayList("MovieReviewList", (ArrayList<? extends Parcelable>) reviews);
+        super.onSaveInstanceState(outState);
     }
 
     public void getMovieReviewUsingRetrofit()
