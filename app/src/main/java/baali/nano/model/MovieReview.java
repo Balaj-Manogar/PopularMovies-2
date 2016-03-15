@@ -8,6 +8,15 @@ public class MovieReview
     private  String id;
     private String author;
     private String content;
+    public MovieReview(){
+
+    }
+
+    public MovieReview(String theId, String theAuthor, String theContent){
+        id = theId;
+        author = theAuthor;
+        content = theContent;
+    }
 
     public String getAuthor()
     {

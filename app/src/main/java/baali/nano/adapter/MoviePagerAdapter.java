@@ -4,9 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import baali.nano.Fragment2;
 import baali.nano.MainActivityFragment;
 import baali.nano.MovieDetailActivityFragment;
+import baali.nano.ReviewFragment;
 
 /**
  * Created by Balaji on 13/03/16.
@@ -27,9 +27,9 @@ public class MoviePagerAdapter extends FragmentStatePagerAdapter
             case 0:
                 return MovieDetailActivityFragment.newInstance();
             case 1:
-                return Fragment2.newInstance();
+                return ReviewFragment.newInstance();
             case 2:
-                return Fragment2.newInstance();
+                return ReviewFragment.newInstance();
             default:
                 return MainActivityFragment.newInstance();
         }

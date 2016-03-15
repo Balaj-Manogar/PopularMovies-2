@@ -10,7 +10,6 @@ import android.util.Log;
 
 import baali.nano.adapter.MoviePagerAdapter;
 import baali.nano.model.Movie;
-import baali.nano.model.MovieAPIReviewResponse;
 import baali.nano.model.MovieAPIVideoResponse;
 import baali.nano.services.rest.TheMovieAPIService;
 import baali.nano.utils.HttpUtils;
@@ -47,42 +46,10 @@ public class MovieDetailActivity extends AppCompatActivity
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
-        getMovieReviewUsingRetrofit();
         getMovieVideoUsingRetrofit();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    public void getMovieReviewUsingRetrofit()
-    {
-        // retrofit debug purpose
-        OkHttpClient.Builder httpClient = HttpUtils.getDebugBuilder();
-        Movie m = getMovie();
-
-        Retrofit apiService = new Retrofit.Builder().baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient.build())
-                .build();
-
-
-        TheMovieAPIService initAPIService = apiService.create(TheMovieAPIService.class);
-        final Call<MovieAPIReviewResponse> apiCall = initAPIService.fetchMovieReview(String.valueOf(m.getId()), BuildConfig
-                .THE_MOVIE_DB_API_KEY);
-
-        apiCall.enqueue(new Callback<MovieAPIReviewResponse>()
-        {
-            @Override
-            public void onResponse(Call<MovieAPIReviewResponse> call, Response<MovieAPIReviewResponse> response)
-            {
-                Log.d(TAG, "onResponse: Retro: " + response.body().apiMovieReviewsList.size());
-            }
-
-            @Override
-            public void onFailure(Call<MovieAPIReviewResponse> call, Throwable t)
-            {
-                Log.d(TAG, "onFailure: Retro: " + t.getMessage());
-            }
-        });
-    }
 
     public void getMovieVideoUsingRetrofit()
     {
