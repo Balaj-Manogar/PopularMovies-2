@@ -25,9 +25,10 @@
     <string name="img_backdrop_url">http://image.tmdb.org/t/p/w500</string>
     <string name="title_activity_movie_detail">Movie</string>
     <string name="offline_directory">pm2</string>
+    <string name="trailer_poster_prefix">http://img.youtube.com/vi/</string>
+    <string name="trailer_poster_suffix">/default.jpg</string>
+    <string name="youtube_url_prefix">http://www.youtube.com/watch?v=</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

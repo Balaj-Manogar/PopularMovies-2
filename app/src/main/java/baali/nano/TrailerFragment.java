@@ -1,6 +1,8 @@
 package baali.nano;
 
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,9 +10,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import baali.nano.adapter.TrailerAdapter;
@@ -35,7 +40,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Use the {@link TrailerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TrailerFragment extends Fragment
+public class TrailerFragment extends Fragment implements  AdapterView.OnItemClickListener
 {
 
     private static final String TAG = TrailerFragment.class.getSimpleName();
@@ -43,6 +48,11 @@ public class TrailerFragment extends Fragment
     @Nullable
     @BindString(R.string.q_retrofit_base_url)
     String baseUrl;
+
+    @BindString(R.string.youtube_url_prefix)
+    String youtubeUrlPrefix;
+
+
 
     @Nullable
     @Bind(R.id.trailer_list_view)
@@ -83,7 +93,7 @@ public class TrailerFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        View rootView = inflater.inflate(R.layout.fragment_review, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_trailer, container, false);
         ButterKnife.bind(this, rootView);
 
         if (savedInstanceState != null)
@@ -92,6 +102,7 @@ public class TrailerFragment extends Fragment
 
             trailerAdapter = new TrailerAdapter(getContext(), R.layout.list_movie_trailer, trailers);
             trailerListView.setAdapter(trailerAdapter);
+            trailerListView.setOnItemClickListener(this);
             Log.d(TAG, "onCreateView: from saved instance");
         }
         else
@@ -123,7 +134,23 @@ public class TrailerFragment extends Fragment
             @Override
             public void onResponse(Call<MovieAPIVideoResponse> call, Response<MovieAPIVideoResponse> response)
             {
-                Log.d(TAG, "onResponse: Retro: " + response.body().apiMovieVideosList.get(0).getId());
+                List<MovieVideo> apiMovieTrailerList = response.body().apiMovieVideosList;
+                int trailerCount = apiMovieTrailerList.size();
+                Log.d(TAG, "onResponse: Retro: " + trailerCount);
+                if (trailerCount > 0)
+                {
+
+                    trailers = new ArrayList<MovieVideo>(apiMovieTrailerList);
+                    trailerAdapter = new TrailerAdapter(getContext(), R.layout.list_movie_trailer, trailers);
+                    trailerListView.setAdapter(trailerAdapter);
+                    trailerListView.setOnItemClickListener(TrailerFragment.this);
+                    Log.d(TAG, "onResponse: list size: " + trailers.size());
+
+                }
+                else
+                {
+                    Toast.makeText(getContext(), "No Trailers found for this movie...", Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
@@ -142,4 +169,10 @@ public class TrailerFragment extends Fragment
         return movie;
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+    {
+        String ytTrailerUrl = youtubeUrlPrefix + trailers.get(position).getKey();
+        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ytTrailerUrl)));
+    }
 }

@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import baali.nano.MainActivityFragment;
 import baali.nano.MovieDetailActivityFragment;
 import baali.nano.ReviewFragment;
+import baali.nano.TrailerFragment;
 
 /**
  * Created by Balaji on 13/03/16.
@@ -29,7 +30,7 @@ public class MoviePagerAdapter extends FragmentStatePagerAdapter
             case 1:
                 return ReviewFragment.newInstance();
             case 2:
-                return ReviewFragment.newInstance();
+                return TrailerFragment.newInstance();
             default:
                 return MainActivityFragment.newInstance();
         }
