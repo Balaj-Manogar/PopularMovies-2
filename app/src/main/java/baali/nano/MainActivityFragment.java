@@ -49,10 +49,24 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
     private List<Movie> moviesList;
     private ArrayAdapter movieAdapter;
     private GridView gridMoviePoster;
+    private boolean twoPane = false;
+    private boolean isPositionFirst = true;
+    private static final String DF_TAG = "DFTAG";
+
 
     public MainActivityFragment()
     {
         moviesList = new ArrayList<>();
+    }
+
+    public boolean isTwoPane()
+    {
+        return twoPane;
+    }
+
+    public void setTwoPane(boolean twoPane)
+    {
+        this.twoPane = twoPane;
     }
 
     @Override
@@ -61,8 +75,6 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
         super.onStart();
         //FetchMovieData movieData = new FetchMovieData();
         Log.d(TAG, "onStart APP: " + AppStatus.getState() + " ::: " + moviesList);
-
-
     }
 
     @Override
@@ -220,6 +232,18 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
         {
             movieAdapter.clear();
             movieAdapter.addAll(movieList);
+            if (isPositionFirst && twoPane)
+            {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("movie", movieList.get(0));
+                Fragment fragment = MovieDetailWideFragment.newInstance();
+                fragment.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.movie_detail_frame, fragment, DF_TAG)
+                        .commit();
+                isPositionFirst = false;
+            }
+
         }
         else
         {
@@ -234,9 +258,49 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
 //          Toast.makeText(getContext(), ((Movie)moviesList.get(position)).toString() , Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
-        intent.putExtra("movie", moviesList.get(position));
-        startActivity(intent);
+        Log.d(TAG, "onItemClick: Clicked");
+        if (twoPane)
+        {
+//            Bundle bundle = new Bundle();
+//            bundle.putParcelable("movie", moviesList.get(0));
+//            Fragment newFragment = MovieDetailWideFragment.newInstance();
+//            newFragment.setArguments(bundle);
+//            MovieDetailWideFragment currentFragment = (MovieDetailWideFragment) getActivity().getSupportFragmentManager()
+//                    .findFragmentByTag(DF_TAG);
+//            currentFragment.getArguments().putParcelable("movie", moviesList.get(position));
+//            Log.d(TAG, "onItemClick new: " + currentFragment.getArguments());
+//            getActivity().getSupportFragmentManager().beginTransaction().detach(currentFragment)
+//                    .attach(currentFragment)
+//                    .commit();
+//            android.support.v4.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+//            fragmentTransaction.detach(currentFragment);
+//            fragmentTransaction.attach(newFragment);
+//            fragmentTransaction.commit();
+            Log.d(TAG, "onItemClick: " + moviesList.size());
+            Log.d(TAG, "onItemClick: ");
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("movie", moviesList.get(position));
+            Fragment fragment = MovieDetailWideFragment.newInstance();
+            fragment.setArguments(bundle);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.movie_detail_frame, fragment, DF_TAG)
+                    .commit();
+
+//            frag.setArguments(bundle);
+//            frag.
+//            frag.cre
+//            Log.d(TAG, "onItemClick: " + getActivity().getSupportFragmentManager().findFragmentByTag(DF_TAG));
+//                getActivity().getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.movie_detail_frame, fragment, DF_TAG)
+//                        .commit();
+        }
+        else
+        {
+            Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
+            intent.putExtra("movie", moviesList.get(position));
+            startActivity(intent);
+        }
+
     }
 
     public void getMovieDataUsingRetrofit(String order)
@@ -272,7 +336,10 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
         });
     }
 
-
-
-
+    @Override
+    public void onDestroyView()
+    {
+        super.onDestroyView();
+        isPositionFirst = true;
+    }
 }

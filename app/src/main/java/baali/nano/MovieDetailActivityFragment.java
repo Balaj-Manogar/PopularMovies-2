@@ -49,13 +49,14 @@ public class MovieDetailActivityFragment extends Fragment
 
     }
 
-    public static MovieDetailActivityFragment newInstance()
+    public static MovieDetailActivityFragment newInstance(Movie m)
     {
 
-//        Bundle args = new Bundle();
-
+    Bundle args = new Bundle();
+    args.putParcelable("movie", m);
         MovieDetailActivityFragment fragment = new MovieDetailActivityFragment();
-//        fragment.setArguments(args);
+        fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -78,7 +79,7 @@ public class MovieDetailActivityFragment extends Fragment
 
     private Movie getMovie()
     {
-        Bundle b = getActivity().getIntent().getExtras();
+        Bundle b = (getActivity().getIntent().getExtras() == null) ? this.getArguments() : getActivity().getIntent().getExtras();
         Movie movie = b.getParcelable("movie");
         Log.d(TAG, "getMovie: " + movie);
         return movie;

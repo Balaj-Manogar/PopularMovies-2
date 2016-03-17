@@ -13,8 +13,10 @@ public class MainActivity extends AppCompatActivity
 {
     // this value is used to track onCreate state
     private AtomicBoolean passedOnCreateState = new AtomicBoolean(false);
+    private boolean twoPane = false;
 
     private String TAG = MainActivity.class.getSimpleName();
+    private static final String DF_TAG = "DFTAG";
 
     @Override
     protected void onStart()
@@ -31,12 +33,27 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        if (findViewById(R.id.movie_detail_frame) != null)
+        {
+            twoPane = true;
+            if (savedInstanceState == null)
+            {
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.movie_detail_frame, MovieDetailWideFragment.newInstance(), DF_TAG)
+                        .commit();
 
+            }
+            Log.d(TAG, "onCreate: sw600dp");
+        }
+        else
+        {
+            twoPane = false;
+        }
+        MainActivityFragment posterFragment = (MainActivityFragment) getSupportFragmentManager().findFragmentById(R.id.fragment);
+        posterFragment.setTwoPane(twoPane);
 
 
         Log.d(TAG, "onCreate: " + BuildConfig.THE_MOVIE_DB_API_KEY);
-        String s = "lk";
-
     }
 
    /* @Override
@@ -62,7 +79,6 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }*/
-
 
 
     public interface DelegateMovieAdapterProcess<T>

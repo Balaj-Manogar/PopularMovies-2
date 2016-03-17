@@ -76,9 +76,12 @@ public class TrailerFragment extends Fragment implements  AdapterView.OnItemClic
      * @return A new instance of fragment TrailerFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static TrailerFragment newInstance()
+    public static TrailerFragment newInstance(Movie m)
     {
+        Bundle args = new Bundle();
+        args.putParcelable("movie", m);
         TrailerFragment fragment = new TrailerFragment();
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -163,7 +166,7 @@ public class TrailerFragment extends Fragment implements  AdapterView.OnItemClic
 
     private Movie getMovie()
     {
-        Bundle b = getActivity().getIntent().getExtras();
+        Bundle b = (getActivity().getIntent().getExtras() == null) ? this.getArguments() : getActivity().getIntent().getExtras();
         Movie movie = b.getParcelable("movie");
         Log.d(TAG, "getMovie: " + movie);
         return movie;

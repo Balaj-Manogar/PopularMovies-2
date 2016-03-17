@@ -39,7 +39,7 @@ public class MovieDetailActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         /*Tab layout for movies*/
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-        PagerAdapter pagerAdapter = new MoviePagerAdapter(getSupportFragmentManager());
+        PagerAdapter pagerAdapter = new MoviePagerAdapter(getSupportFragmentManager(), getMovie());
         viewPager.setAdapter(pagerAdapter);
 
         // Setup the Tabs

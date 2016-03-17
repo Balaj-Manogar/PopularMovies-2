@@ -65,9 +65,12 @@ public class ReviewFragment extends Fragment
         // Required empty public constructor
     }
 
-    public static ReviewFragment newInstance()
+    public static ReviewFragment newInstance(Movie m)
     {
+        Bundle args = new Bundle();
+        args.putParcelable("movie", m);
         ReviewFragment fragment = new ReviewFragment();
+        fragment.setArguments(args);
         return fragment;
     }
 
@@ -157,7 +160,7 @@ public class ReviewFragment extends Fragment
 
     private Movie getMovie()
     {
-        Bundle b = getActivity().getIntent().getExtras();
+        Bundle b = (getActivity().getIntent().getExtras() == null) ? this.getArguments() : getActivity().getIntent().getExtras();
         Movie movie = b.getParcelable("movie");
         Log.d(TAG, "getMovie: " + movie);
         return movie;
