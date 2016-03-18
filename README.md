@@ -25,15 +25,23 @@ title, backdrop image, overview on offline.</li>
 
 <h5>Screenshots</h5>
 
-<img src="https://github.com/Balaj-Manogar/PopularMovies-2/blob
-/master/screenshots/phone_master.png" />
+<div>
+<h6>Phone Master and Detail</h6>
+<img src="https://raw.githubusercontent.com/Balaj-Manogar/PopularMovies-2/master/screenshots/phone_master.png" height="400"/>
 
-<img src="https://github.com/Balaj-Manogar/PopularMovies-2/blob
-/master/screenshots/phone_detail.png" />
+<img src="https://raw.githubusercontent.com/Balaj-Manogar/PopularMovies-2/master/screenshots/phone_detail.png" height="400"/>
+</div>
 
-<img src="https://github.com/Balaj-Manogar/PopularMovies-2/blob
-/master/screenshots/fav_added.png" />
+<div>
+<h6>Tab Landscape and portrait</h6>
+<img src="https://raw.githubusercontent.com/Balaj-Manogar/PopularMovies-2/master/screenshots/tab_land.png" width="500"/>
 
-<img src="https://github.com/Balaj-Manogar/PopularMovies-2/blob
-/master/screenshots/fav_removed.png" />
+<img src="https://raw.githubusercontent.com/Balaj-Manogar/PopularMovies-2/master/screenshots/tab_port.png" height="600"/>
+</div>
 
+<div>
+<h6>Favourite added and removed</h6>
+<img src="https://raw.githubusercontent.com/Balaj-Manogar/PopularMovies-2/master/screenshots/fav_added.png" height="400"/>
+
+<img src="https://raw.githubusercontent.com/Balaj-Manogar/PopularMovies-2/master/screenshots/fav_removed.png" height="400"/>
+</div>
