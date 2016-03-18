@@ -79,7 +79,8 @@ public class MovieDetailActivityFragment extends Fragment
 
     private Movie getMovie()
     {
-        Bundle b = (getActivity().getIntent().getExtras() == null) ? this.getArguments() : getActivity().getIntent().getExtras();
+        Bundle extras = getActivity().getIntent().getExtras();
+        Bundle b = (extras != null && extras.getParcelable("movie") != null ) ? extras : this.getArguments();
         Movie movie = b.getParcelable("movie");
         Log.d(TAG, "getMovie: " + movie);
         return movie;

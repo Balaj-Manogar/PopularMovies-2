@@ -1,7 +1,6 @@
 package baali.nano;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -41,12 +40,14 @@ public class MovieDetailWideFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_movie_wide_detail, container, false);
         this.rootView = view;
+        Log.d(TAG, "WideFragT: " + getActivity().findViewById(R.id.movie_detail_frame));
         if (getActivity().findViewById(R.id.movie_detail_frame) != null)
         {
+            Log.d(TAG, "WideFragT:  expects null at relaunch: " + getMovie());
             if(getMovie() != null)
             {
 //                MovieDetailActivityFragment overviewFragment =
-                Log.d(TAG, "onCreateView: not empty");
+                Log.d(TAG, "onCreateView: not empty: " + getMovie());
                 ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.view_pager);
                 PagerAdapter pagerAdapter = new MoviePagerAdapter(getActivity().getSupportFragmentManager(), getMovie());
                 viewPager.setAdapter(pagerAdapter);
@@ -78,13 +79,18 @@ public class MovieDetailWideFragment extends Fragment
 
     private Movie getMovie()
     {
-        Bundle b = (getActivity().getIntent().getExtras() == null) ? this.getArguments() : null;
-        Log.d(TAG, "getMovieBundle: " + b);
-        if (b != null)
+        Bundle extras = getActivity().getIntent().getExtras();
+        Bundle b = (extras != null && extras.getParcelable("movie") != null ) ? extras : this.getArguments();
+        Log.d(TAG, "getMovie tt: " + b.getParcelable("movie"));
+        if (extras != null)
         {
-            Intent intent = new Intent();
-            intent.putExtra("movie", b.getParcelable("movie"));
+            for (String key: extras.keySet())
+            {
+                Log.d ("myApplication", key + " is a key in the bundle");
+            }
+
         }
+
         Movie movie = null;
         Log.d(TAG, "getMovie: " + this.getArguments());
         if (b != null)

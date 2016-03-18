@@ -239,12 +239,20 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
             {
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("movie", movieList.get(0));
+
                 Fragment fragment = MovieDetailWideFragment.newInstance();
+
                 fragment.setArguments(bundle);
-                getActivity().getSupportFragmentManager().beginTransaction()
+                Log.d(TAG, "process: Bundle status: " + bundle.getParcelable("movie"));
+                int status = getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.movie_detail_frame, fragment, DF_TAG)
                         .commit();
                 isPositionFirst = false;
+
+                if (AppStatus.getState() == null)
+                {
+                    AppStatus.setState(MovieFetchOptions.Popular);
+                }
             }
 
         }

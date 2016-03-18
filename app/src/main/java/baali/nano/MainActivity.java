@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart()
     {
+        Log.d(TAG, "onStart: " + twoPane);
 
         super.onStart();
     }
@@ -36,13 +37,13 @@ public class MainActivity extends AppCompatActivity
         if (findViewById(R.id.movie_detail_frame) != null)
         {
             twoPane = true;
-            if (savedInstanceState == null)
-            {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.movie_detail_frame, MovieDetailWideFragment.newInstance(), DF_TAG)
-                        .commit();
-
-            }
+//            if (savedInstanceState == null)
+//            {
+//                getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.movie_detail_frame, MovieDetailWideFragment.newInstance(), DF_TAG)
+//                        .commit();
+//
+//            }
             Log.d(TAG, "onCreate: sw600dp");
         }
         else
