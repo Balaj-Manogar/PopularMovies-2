@@ -156,18 +156,21 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
             case R.id.action_popular:
             {
                 AppStatus.setState(MovieFetchOptions.Popular);
+                isPositionFirst = true;
                 populateGridView(MovieFetchOptions.Popular);
                 break;
             }
             case R.id.action_rating:
             {
                 AppStatus.setState(MovieFetchOptions.Rating);
+                isPositionFirst = true;
                 populateGridView(MovieFetchOptions.Rating);
                 break;
             }
             case R.id.action_favourite:
             {
                 AppStatus.setState(MovieFetchOptions.Favourite);
+                isPositionFirst = true;
                 populateGridView(MovieFetchOptions.Favourite);
                 break;
             }

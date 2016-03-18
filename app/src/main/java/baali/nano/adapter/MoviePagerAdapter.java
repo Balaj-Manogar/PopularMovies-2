@@ -17,6 +17,7 @@ public class MoviePagerAdapter extends FragmentStatePagerAdapter
 {
 
     Movie movie;
+
     public MoviePagerAdapter(FragmentManager fm, Movie movie)
     {
         super(fm);
@@ -55,6 +56,15 @@ public class MoviePagerAdapter extends FragmentStatePagerAdapter
     @Override
     public CharSequence getPageTitle(int position)
     {
+        switch (position)
+        {
+            case 0:
+                return "Overview";
+            case 1:
+                return "Reviews";
+            case 2:
+                return "Trailers";
+        }
         return "Tab " + (position + 1);
     }
 

@@ -4,6 +4,7 @@ package baali.nano;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -101,8 +102,10 @@ public class TrailerFragment extends Fragment implements  AdapterView.OnItemClic
 
         if (savedInstanceState != null)
         {
-            trailers = savedInstanceState.getParcelableArrayList("MovieReviewList");
-
+            Bundle b = this.getArguments();
+            Log.d(TAG, "bundle: " + b);
+            trailers = savedInstanceState.getParcelableArrayList("MovieTrailerList");
+            Log.d(TAG, "trailers: " );
             trailerAdapter = new TrailerAdapter(getContext(), R.layout.list_movie_trailer, trailers);
             trailerListView.setAdapter(trailerAdapter);
             trailerListView.setOnItemClickListener(this);
@@ -177,5 +180,12 @@ public class TrailerFragment extends Fragment implements  AdapterView.OnItemClic
     {
         String ytTrailerUrl = youtubeUrlPrefix + trailers.get(position).getKey();
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ytTrailerUrl)));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        outState.putParcelableArrayList("MovieTrailerList", (ArrayList<? extends Parcelable>) trailers);
+        super.onSaveInstanceState(outState);
     }
 }
