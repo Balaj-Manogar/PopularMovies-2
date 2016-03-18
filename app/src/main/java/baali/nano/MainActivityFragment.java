@@ -243,7 +243,6 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
                 Fragment fragment = MovieDetailWideFragment.newInstance();
 
                 fragment.setArguments(bundle);
-                Log.d(TAG, "process: Bundle status: " + bundle.getParcelable("movie"));
                 int status = getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.movie_detail_frame, fragment, DF_TAG)
                         .commit();
@@ -268,27 +267,8 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
-//          Toast.makeText(getContext(), ((Movie)moviesList.get(position)).toString() , Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "onItemClick: Clicked");
         if (twoPane)
         {
-//            Bundle bundle = new Bundle();
-//            bundle.putParcelable("movie", moviesList.get(0));
-//            Fragment newFragment = MovieDetailWideFragment.newInstance();
-//            newFragment.setArguments(bundle);
-//            MovieDetailWideFragment currentFragment = (MovieDetailWideFragment) getActivity().getSupportFragmentManager()
-//                    .findFragmentByTag(DF_TAG);
-//            currentFragment.getArguments().putParcelable("movie", moviesList.get(position));
-//            Log.d(TAG, "onItemClick new: " + currentFragment.getArguments());
-//            getActivity().getSupportFragmentManager().beginTransaction().detach(currentFragment)
-//                    .attach(currentFragment)
-//                    .commit();
-//            android.support.v4.app.FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-//            fragmentTransaction.detach(currentFragment);
-//            fragmentTransaction.attach(newFragment);
-//            fragmentTransaction.commit();
-            Log.d(TAG, "onItemClick: " + moviesList.size());
-            Log.d(TAG, "onItemClick: ");
             Bundle bundle = new Bundle();
             bundle.putParcelable("movie", moviesList.get(position));
             Fragment fragment = MovieDetailWideFragment.newInstance();
@@ -297,13 +277,6 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
                     .replace(R.id.movie_detail_frame, fragment, DF_TAG)
                     .commit();
 
-//            frag.setArguments(bundle);
-//            frag.
-//            frag.cre
-//            Log.d(TAG, "onItemClick: " + getActivity().getSupportFragmentManager().findFragmentByTag(DF_TAG));
-//                getActivity().getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.movie_detail_frame, fragment, DF_TAG)
-//                        .commit();
         }
         else
         {
@@ -334,14 +307,12 @@ public class MainActivityFragment extends Fragment implements MainActivity.Deleg
             @Override
             public void onResponse(Call<MovieAPIResponse> call, Response<MovieAPIResponse> response)
             {
-                Log.d(TAG, "onResponse: Retro: " + response.body().apiMoviesList.get(0));
                 process(response.body().apiMoviesList);
             }
 
             @Override
             public void onFailure(Call<MovieAPIResponse> call, Throwable t)
             {
-                Log.d(TAG, "onFailure: Retro: " + t.getMessage());
                 // display a dialog here about failure
             }
         });

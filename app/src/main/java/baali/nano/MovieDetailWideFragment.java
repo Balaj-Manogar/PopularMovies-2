@@ -81,23 +81,12 @@ public class MovieDetailWideFragment extends Fragment
     {
         Bundle extras = getActivity().getIntent().getExtras();
         Bundle b = (extras != null && extras.getParcelable("movie") != null ) ? extras : this.getArguments();
-        Log.d(TAG, "getMovie tt: " + b.getParcelable("movie"));
-        if (extras != null)
-        {
-            for (String key: extras.keySet())
-            {
-                Log.d ("myApplication", key + " is a key in the bundle");
-            }
-
-        }
 
         Movie movie = null;
-        Log.d(TAG, "getMovie: " + this.getArguments());
         if (b != null)
         {
             movie = b.getParcelable("movie");
         }
-        Log.d(TAG, "getMovie: " + movie);
         return movie;
     }
 

@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,7 +102,6 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
                     .placeholder(R.drawable.main_default_poster_drawable)
                     .error(R.drawable.main_error_poster_drawable)
                     .into(imageView);
-            Log.d(TAG, "getView: " + localPath);
         }
         else
         {
@@ -193,7 +191,6 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
                     if (favMovieIndex != -1)
                     {
                         moviesList.remove(favMovieIndex);
-                        Log.d(TAG, "executeByFavouriteState: " + moviesList.size());
                         notifyDataSetChanged();
                         redirectIfEmpty(favModel);
                     }
@@ -218,7 +215,6 @@ public class MoviePosterAdapter extends ArrayAdapter<Movie>
             if(AppStatus.isOnline(getContext()))
             {
                 // I dont know whether this is correct or not, please give feedback
-                Log.d(TAG, "executeByFavouriteState: ");
                 Intent intent = new Intent(favModel.view.getContext(), MainActivity.class);
                 AppStatus.setState(MovieFetchOptions.Popular);
                 favModel.view.getContext().startActivity(intent);

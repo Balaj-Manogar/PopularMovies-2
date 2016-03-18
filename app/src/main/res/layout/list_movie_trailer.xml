@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              android:orientation="horizontal">
 
-    <ImageView
-    android:layout_width="120dp"
-    android:layout_height="90dp"
-    android:id="@+id/trailer_youtube_poster"/>
+    <!-- Margin bottom is not applied to parent, so created one more layout and applied margin bottom -->
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:layout_marginBottom="16dp"
+                  android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/trailer_youtube_title"
-        android:paddingLeft="10dp"/>
+        <ImageView
+            android:id="@+id/trailer_youtube_poster"
+            android:layout_width="120dp"
+            android:layout_height="90dp"/>
 
+        <TextView
+            android:id="@+id/trailer_youtube_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"/>
 
+    </LinearLayout>
 
 </LinearLayout>

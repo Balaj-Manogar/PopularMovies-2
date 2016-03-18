@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.util.Log;
 
 import baali.nano.model.provider.MovieContract;
 import baali.nano.model.provider.MovieContract.MovieEntry;
@@ -50,7 +49,6 @@ public class MovieProvider extends ContentProvider
             case MOVIE_WITH_ID:
             {
                 selection = (selection == null) ? MovieEntry.MOVIE_ID + "=?" : selection;
-                Log.d(TAG, "query: " + selection);
                 cursor = db.query(MovieEntry.TABLE_NAME, MovieEntry.PROJECTION_ALL
                         , selection, selectionArgs, null, null, sortOrder);
                 break;

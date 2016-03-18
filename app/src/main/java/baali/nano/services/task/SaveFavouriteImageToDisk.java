@@ -3,7 +3,6 @@ package baali.nano.services.task;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -50,7 +49,6 @@ public class SaveFavouriteImageToDisk implements Target
 //                                        + "/data/" + getContext().getApplicationContext().getPackageName());
 //                                boolean isThere = f.isDirectory();
 //                                Boolean writable = f.canWrite();
-                Log.d(TAG, "onBitmapLoaded: " + dir.getAbsolutePath());
                 boolean dirExists = dir.exists();
                 if (!dirExists)
                 {
@@ -67,7 +65,6 @@ public class SaveFavouriteImageToDisk implements Target
                     image.createNewFile();
                     FileOutputStream fos = new FileOutputStream(image);
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 80, fos);
-                    Log.d(TAG, "onBitmapLoaded Image: " + image.getAbsolutePath());
                     fos.flush();
                     fos.close();
 

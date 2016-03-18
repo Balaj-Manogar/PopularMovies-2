@@ -86,7 +86,6 @@ public class MovieDetailActivity extends AppCompatActivity
     {
         Bundle b = getIntent().getExtras();
         Movie movie = b.getParcelable("movie");
-        Log.d(TAG, "getMovie: " + movie);
         return movie;
     }
 

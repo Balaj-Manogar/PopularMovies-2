@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import baali.nano.adapter.ReviewAdapter;
+import baali.nano.config.AppStatus;
 import baali.nano.model.Movie;
 import baali.nano.model.MovieAPIReviewResponse;
 import baali.nano.model.MovieReview;
@@ -86,18 +87,25 @@ public class ReviewFragment extends Fragment
     {
         View rootView = inflater.inflate(R.layout.fragment_review, container, false);
         ButterKnife.bind(this, rootView);
-        if (savedInstanceState != null)
-        {
-            reviews = savedInstanceState.getParcelableArrayList("MovieReviewList");
 
-            reviewAdapter = new ReviewAdapter(getContext(), R.layout.list_movie_review, reviews);
-            reviewListView.setAdapter(reviewAdapter);
-            Log.d(TAG, "onCreateView: from saved instance");
-        }
-        else
-        {
-            getMovieReviewUsingRetrofit();
-        }
+            if (savedInstanceState != null)
+            {
+                reviews = savedInstanceState.getParcelableArrayList("MovieReviewList");
+
+                reviewAdapter = new ReviewAdapter(getContext(), R.layout.list_movie_review, reviews);
+                reviewListView.setAdapter(reviewAdapter);
+            }
+            else
+            {
+                if (AppStatus.isOnline(getContext()))
+                {
+                    getMovieReviewUsingRetrofit();
+                }else
+                {
+                    Toast.makeText(getContext(), "This feature is not available for offline", Toast.LENGTH_SHORT).show();
+                }
+            }
+
 
 
         return rootView;
@@ -133,14 +141,12 @@ public class ReviewFragment extends Fragment
             {
                 List<MovieReview> apiMovieReviewsList = response.body().apiMovieReviewsList;
                 int reviewCount = apiMovieReviewsList.size();
-                Log.d(TAG, "onResponse: Retro: " + reviewCount);
                 if (reviewCount > 0)
                 {
 
                     reviews = new ArrayList<MovieReview>(apiMovieReviewsList);
                     reviewAdapter = new ReviewAdapter(getContext(), R.layout.list_movie_review, reviews);
                     reviewListView.setAdapter(reviewAdapter);
-                    Log.d(TAG, "onResponse: list size: " + reviews.size());
 
                 }
                 else
@@ -161,27 +167,11 @@ public class ReviewFragment extends Fragment
     private Movie getMovie()
     {
         Bundle extras = getActivity().getIntent().getExtras();
-        Bundle b = (extras != null && extras.getParcelable("movie") != null ) ? extras : this.getArguments();
+        Bundle b = (extras != null && extras.getParcelable("movie") != null) ? extras : this.getArguments();
         Movie movie = b.getParcelable("movie");
-        Log.d(TAG, "getMovie: " + movie);
         return movie;
     }
 
-
-//    @Override
-//    public void onAttach(Context context)
-//    {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener)
-//        {
-//            mListener = (OnFragmentInteractionListener) context;
-//        }
-//        else
-//        {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
 
     @Override
     public void onDetach()
@@ -205,8 +195,6 @@ public class ReviewFragment extends Fragment
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
-
 
 
 }

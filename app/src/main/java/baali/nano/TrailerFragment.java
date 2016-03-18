@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import baali.nano.adapter.TrailerAdapter;
+import baali.nano.config.AppStatus;
 import baali.nano.model.Movie;
 import baali.nano.model.MovieAPIVideoResponse;
 import baali.nano.model.MovieVideo;
@@ -41,7 +42,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Use the {@link TrailerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TrailerFragment extends Fragment implements  AdapterView.OnItemClickListener
+public class TrailerFragment extends Fragment implements AdapterView.OnItemClickListener
 {
 
     private static final String TAG = TrailerFragment.class.getSimpleName();
@@ -54,14 +55,12 @@ public class TrailerFragment extends Fragment implements  AdapterView.OnItemClic
     String youtubeUrlPrefix;
 
 
-
     @Nullable
     @Bind(R.id.trailer_list_view)
     ListView trailerListView;
 
     private ArrayAdapter<MovieVideo> trailerAdapter;
     private List<MovieVideo> trailers;
-
 
 
     public TrailerFragment()
@@ -73,7 +72,6 @@ public class TrailerFragment extends Fragment implements  AdapterView.OnItemClic
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-
      * @return A new instance of fragment TrailerFragment.
      */
     // TODO: Rename and change types and number of parameters
@@ -103,17 +101,21 @@ public class TrailerFragment extends Fragment implements  AdapterView.OnItemClic
         if (savedInstanceState != null)
         {
             Bundle b = this.getArguments();
-            Log.d(TAG, "bundle: " + b);
             trailers = savedInstanceState.getParcelableArrayList("MovieTrailerList");
-            Log.d(TAG, "trailers: " );
             trailerAdapter = new TrailerAdapter(getContext(), R.layout.list_movie_trailer, trailers);
             trailerListView.setAdapter(trailerAdapter);
             trailerListView.setOnItemClickListener(this);
-            Log.d(TAG, "onCreateView: from saved instance");
         }
         else
         {
-            getMovieTrailerUsingRetrofit();
+            if (AppStatus.isOnline(getContext()))
+            {
+                getMovieTrailerUsingRetrofit();
+            }
+            else
+            {
+                Toast.makeText(getContext(), "This feature is not available for offline", Toast.LENGTH_SHORT).show();
+            }
         }
 
         return rootView;
@@ -142,7 +144,6 @@ public class TrailerFragment extends Fragment implements  AdapterView.OnItemClic
             {
                 List<MovieVideo> apiMovieTrailerList = response.body().apiMovieVideosList;
                 int trailerCount = apiMovieTrailerList.size();
-                Log.d(TAG, "onResponse: Retro: " + trailerCount);
                 if (trailerCount > 0)
                 {
 
@@ -150,7 +151,6 @@ public class TrailerFragment extends Fragment implements  AdapterView.OnItemClic
                     trailerAdapter = new TrailerAdapter(getContext(), R.layout.list_movie_trailer, trailers);
                     trailerListView.setAdapter(trailerAdapter);
                     trailerListView.setOnItemClickListener(TrailerFragment.this);
-                    Log.d(TAG, "onResponse: list size: " + trailers.size());
 
                 }
                 else
@@ -170,9 +170,8 @@ public class TrailerFragment extends Fragment implements  AdapterView.OnItemClic
     private Movie getMovie()
     {
         Bundle extras = getActivity().getIntent().getExtras();
-        Bundle b = (extras != null && extras.getParcelable("movie") != null ) ? extras : this.getArguments();
+        Bundle b = (extras != null && extras.getParcelable("movie") != null) ? extras : this.getArguments();
         Movie movie = b.getParcelable("movie");
-        Log.d(TAG, "getMovie: " + movie);
         return movie;
     }
 
