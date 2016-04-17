@@ -102,7 +102,7 @@ public class TrailerFragment extends Fragment implements AdapterView.OnItemClick
         {
             Bundle b = this.getArguments();
             trailers = savedInstanceState.getParcelableArrayList("MovieTrailerList");
-            trailerAdapter = new TrailerAdapter(getContext(), R.layout.list_movie_trailer, trailers);
+            trailerAdapter = new TrailerAdapter(getContext(), R.layout.list_movie_trailer, trailers, getActivity());
             trailerListView.setAdapter(trailerAdapter);
             trailerListView.setOnItemClickListener(this);
         }
@@ -148,7 +148,7 @@ public class TrailerFragment extends Fragment implements AdapterView.OnItemClick
                 {
 
                     trailers = new ArrayList<MovieVideo>(apiMovieTrailerList);
-                    trailerAdapter = new TrailerAdapter(getContext(), R.layout.list_movie_trailer, trailers);
+                    trailerAdapter = new TrailerAdapter(getContext(), R.layout.list_movie_trailer, trailers, getActivity());
                     trailerListView.setAdapter(trailerAdapter);
                     trailerListView.setOnItemClickListener(TrailerFragment.this);
 
@@ -179,6 +179,7 @@ public class TrailerFragment extends Fragment implements AdapterView.OnItemClick
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
         String ytTrailerUrl = youtubeUrlPrefix + trailers.get(position).getKey();
+        Log.d(TAG, "onItemClick: " + view.getId());
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(ytTrailerUrl)));
     }
 
@@ -188,4 +189,6 @@ public class TrailerFragment extends Fragment implements AdapterView.OnItemClick
         outState.putParcelableArrayList("MovieTrailerList", (ArrayList<? extends Parcelable>) trailers);
         super.onSaveInstanceState(outState);
     }
+
+
 }

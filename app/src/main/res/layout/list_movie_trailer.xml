@@ -11,10 +11,24 @@
                   android:layout_marginBottom="16dp"
                   android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/trailer_youtube_poster"
-            android:layout_width="120dp"
-            android:layout_height="90dp"/>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/trailer_youtube_poster"
+                android:layout_width="120dp"
+                android:layout_height="90dp"/>
+
+            <ImageView
+                android:id="@+id/trailer_share"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="top|right"
+                android:src="@drawable/share"/>
+
+
+        </FrameLayout>
 
         <TextView
             android:id="@+id/trailer_youtube_title"
